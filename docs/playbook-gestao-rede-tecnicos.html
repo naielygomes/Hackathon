@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Gestão da Rede de Técnicos — POP e Playbook Infleet</title>
+<style>
+  @page {
+    size: A4;
+    margin: 2.2cm 2cm 2.2cm 2cm;
+    @bottom-center {
+      content: counter(page) " / " counter(pages);
+      font-size: 9px;
+      color: #667085;
+    }
+  }
+
+  @page :first {
+    margin: 0;
+    @bottom-center {
+      content: "";
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+    color: #344054;
+    font-size: 10.3px;
+    line-height: 1.55;
+  }
+
+  h1, h2, h3 {
+    font-family: "Liberation Serif", Georgia, "Times New Roman", serif;
+    color: #041947;
+    font-weight: 700;
+    margin: 0 0 0.4em 0;
+  }
+
+  h1 {
+    font-size: 20px;
+    page-break-before: always;
+    break-before: page;
+    border-bottom: 2px solid #4B6BF5;
+    padding-bottom: 0.35em;
+    margin-bottom: 0.9em;
+  }
+
+  h1 .chapter-num {
+    display: block;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #4B6BF5;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.3em;
+  }
+
+  h2 {
+    font-size: 14px;
+    margin-top: 1.6em;
+    margin-bottom: 0.5em;
+    color: #041947;
+  }
+
+  h3 {
+    font-size: 11.5px;
+    margin-top: 1.2em;
+    margin-bottom: 0.4em;
+    color: #041947;
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0 0 0.7em 0;
+    text-align: justify;
+  }
+
+  ul, ol {
+    margin: 0 0 0.9em 0;
+    padding-left: 1.4em;
+  }
+
+  li {
+    margin-bottom: 0.35em;
+  }
+
+  strong { color: #041947; }
+
+  code, .mono {
+    font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+    font-size: 9.3px;
+    background: #F2F4F7;
+    padding: 0.05em 0.3em;
+    border-radius: 3px;
+    color: #041947;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.6em 0 1.2em 0;
+    font-size: 9.6px;
+  }
+
+  thead { display: table-header-group; }
+  tr { page-break-inside: avoid; break-inside: avoid; }
+
+  th {
+    background: #041947;
+    color: #FFFFFF;
+    text-align: left;
+    padding: 6px 8px;
+    font-weight: 700;
+    font-size: 9.3px;
+    letter-spacing: 0.02em;
+  }
+
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #EAECF0;
+    vertical-align: top;
+  }
+
+  tbody tr:nth-child(even) { background: #F9FAFB; }
+
+  .callout {
+    border: 1px solid #EAECF0;
+    border-left: 4px solid #4B6BF5;
+    background: #F7F9FF;
+    padding: 0.7em 1em;
+    margin: 0.8em 0 1.1em 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .callout p:last-child { margin-bottom: 0; }
+
+  .callout-title {
+    font-weight: 700;
+    color: #041947;
+    display: block;
+    margin-bottom: 0.25em;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .note {
+    border-left: 4px solid #B45309;
+    background: #FFFBEB;
+  }
+  .note .callout-title { color: #B45309; }
+
+  .ok {
+    border-left: 4px solid #15803D;
+    background: #F0FDF4;
+  }
+  .ok .callout-title { color: #15803D; }
+
+  .danger {
+    border-left: 4px solid #BE123C;
+    background: #FEF2F2;
+  }
+  .danger .callout-title { color: #991B1B; }
+
+  .tag {
+    display: inline-block;
+    font-size: 8.6px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #C7D7FE;
+  }
+
+  .step-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.8em 0 1.2em 0;
+  }
+
+  .step-list li {
+    position: relative;
+    padding: 0.55em 0.8em 0.55em 2.5em;
+    margin-bottom: 0.5em;
+    border: 1px solid #EAECF0;
+    border-radius: 4px;
+    background: #FFFFFF;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .step-list li .step-n {
+    position: absolute;
+    left: 0.6em;
+    top: 0.55em;
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1.5em;
+    text-align: center;
+    background: #041947;
+    color: #FFFFFF;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 9.5px;
+  }
+
+  .step-list li strong {
+    display: block;
+    font-size: 10.3px;
+    margin-bottom: 0.15em;
+  }
+
+  .step-list li p {
+    margin: 0;
+    color: #667085;
+  }
+
+  .checklist {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.8em 0 1.2em 0;
+    columns: 1;
+  }
+
+  .checklist li {
+    padding: 0.4em 0;
+    border-bottom: 1px dashed #EAECF0;
+    font-size: 10.3px;
+  }
+
+  .checklist li .box {
+    font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+    font-size: 12px;
+    margin-right: 0.5em;
+    color: #041947;
+  }
+
+  .prio-alta { color: #BE123C; font-weight: 700; }
+  .prio-media { color: #B45309; font-weight: 700; }
+  .prio-baixa { color: #15803D; font-weight: 700; }
+
+  .status-pill {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 999px;
+  }
+  .st-green { background: #F0FDF4; color: #15803D; }
+  .st-amber { background: #FFFBEB; color: #B45309; }
+  .st-red { background: #FEF2F2; color: #991B1B; }
+  .st-blue { background: #EFF6FF; color: #1D4ED8; }
+  .st-gray { background: #F2F4F7; color: #667085; }
+
+  .kicker {
+    font-size: 9.5px;
+    color: #667085;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    margin: 0 0 0.2em 0;
+  }
+
+  .glossary dt {
+    font-weight: 700;
+    color: #041947;
+    margin-top: 0.8em;
+    font-size: 10.6px;
+  }
+  .glossary dd {
+    margin: 0.15em 0 0 0;
+    color: #344054;
+  }
+
+  .phase-block {
+    border: 1px solid #EAECF0;
+    border-radius: 4px;
+    padding: 0.7em 1em;
+    margin-bottom: 0.8em;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .phase-block h3 { margin-top: 0; }
+  .phase-current {
+    border-left: 4px solid #4B6BF5;
+    background: #F7F9FF;
+  }
+
+  /* ---------------- CAPA ---------------- */
+  .cover {
+    height: 29.7cm;
+    background: #041947;
+    color: #FFFFFF;
+    padding: 3.2cm 2.2cm;
+    position: relative;
+  }
+
+  .cover .brand {
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    color: #FFFFFF;
+    margin-bottom: 5.5cm;
+  }
+
+  .cover .doc-kicker {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #9FB1EA;
+    font-weight: 700;
+    margin-bottom: 0.6em;
+  }
+
+  .cover h1.cover-title {
+    font-family: "Liberation Serif", Georgia, "Times New Roman", serif;
+    font-size: 34px;
+    line-height: 1.25;
+    color: #FFFFFF;
+    border: none;
+    padding: 0;
+    margin: 0 0 0.4em 0;
+    page-break-before: avoid;
+    break-before: avoid;
+  }
+
+  .cover .cover-subtitle {
+    font-size: 14px;
+    color: #C9D4F5;
+    margin-bottom: 2.2cm;
+  }
+
+  .cover .cover-summary {
+    font-size: 11.5px;
+    color: #E3E8FA;
+    max-width: 13cm;
+    line-height: 1.6;
+    border-top: 1px solid #2B3F70;
+    padding-top: 0.9em;
+  }
+
+  .cover .cover-meta {
+    position: absolute;
+    bottom: 2.6cm;
+    left: 2.2cm;
+    right: 2.2cm;
+    font-size: 10px;
+    color: #9FB1EA;
+    border-top: 1px solid #2B3F70;
+    padding-top: 0.8em;
+  }
+
+  .cover .cover-meta table {
+    width: 100%;
+    font-size: 10px;
+    margin: 0;
+  }
+  .cover .cover-meta td {
+    border: none;
+    padding: 2px 0;
+    color: #C9D4F5;
+  }
+  .cover .cover-meta td.k {
+    color: #7C8FC9;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 8.6px;
+    width: 4.5cm;
+  }
+
+  /* ---------------- SUMÁRIO ---------------- */
+  .toc {
+    page-break-before: always;
+    break-before: page;
+  }
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.2em 0 0 0;
+  }
+  .toc-list li {
+    display: table;
+    width: 100%;
+    padding: 0.5em 0;
+    border-bottom: 1px solid #EAECF0;
+    font-size: 11.5px;
+  }
+  .toc-list .toc-num {
+    display: table-cell;
+    width: 1.6em;
+    color: #4B6BF5;
+    font-weight: 700;
+    font-family: "Liberation Serif", Georgia, "Times New Roman", serif;
+    font-size: 13px;
+  }
+  .toc-list .toc-title {
+    display: table-cell;
+    color: #041947;
+    font-weight: 700;
+  }
+  .toc-list .toc-desc {
+    display: block;
+    color: #667085;
+    font-weight: 400;
+    font-size: 9.6px;
+    margin-top: 0.1em;
+  }
+
+  .no-break { page-break-inside: avoid; break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ==================== CAPA ==================== -->
+<div class="cover">
+  <div class="brand">INFLEET</div>
+  <div class="doc-kicker">Procedimento Operacional Padrão &amp; Playbook</div>
+  <h1 class="cover-title">Gestão da Rede de Técnicos</h1>
+  <div class="cover-subtitle">Programa de Saneamento e Reconciliação de Cadastro — Hackathon Infleet</div>
+  <div class="cover-summary">
+    Este documento padroniza o cadastro, a identificação e a reconciliação de técnicos de campo
+    entre OPS, HubSpot, BTime, ClickUp, o Drive de contratos e o localizador de mapa, estabelecendo
+    o procedimento operacional de referência para a equipe de operações da Infleet.
+  </div>
+  <div class="cover-meta">
+    <table>
+      <tr><td class="k">Documento</td><td>POP-RTEC-001 · Gestão da Rede de Técnicos</td></tr>
+      <tr><td class="k">Versão</td><td>v1.0</td></tr>
+      <tr><td class="k">Data de publicação</td><td>19 de setembro de 2026</td></tr>
+      <tr><td class="k">Área responsável</td><td>Operações · Infleet</td></tr>
+      <tr><td class="k">Classificação</td><td>Uso interno — contém referência a dados cadastrais mascarados (LGPD)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== SUMÁRIO ==================== -->
+<div class="toc">
+<h1 style="page-break-before: avoid; break-before: avoid;"><span class="chapter-num">Índice</span>Sumário</h1>
+<ol class="toc-list">
+  <li><span class="toc-num">1</span><span class="toc-title">Objetivo<span class="toc-desc">Por que este POP existe e qual problema ele resolve</span></span></li>
+  <li><span class="toc-num">2</span><span class="toc-title">Escopo<span class="toc-desc">O que este procedimento cobre e o que fica fora</span></span></li>
+  <li><span class="toc-num">3</span><span class="toc-title">Conceitos<span class="toc-desc">Glossário de termos e entidades usados no documento</span></span></li>
+  <li><span class="toc-num">4</span><span class="toc-title">Princípios da operação<span class="toc-desc">Regras que orientam toda decisão de cadastro</span></span></li>
+  <li><span class="toc-num">5</span><span class="toc-title">Procedimento — Novo técnico<span class="toc-desc">Os 13 passos do recebimento de contrato ao cadastro liberado</span></span></li>
+  <li><span class="toc-num">6</span><span class="toc-title">Procedimento — Técnico sem contrato<span class="toc-desc">Tratamento de técnicos identificados sem vínculo contratual formal</span></span></li>
+  <li><span class="toc-num">7</span><span class="toc-title">Procedimento — Reconciliação<span class="toc-desc">Critérios de match forte, intermediário e fraco entre bases</span></span></li>
+  <li><span class="toc-num">8</span><span class="toc-title">Procedimento — Divergências<span class="toc-desc">Tipos de divergência entre sistemas e ação recomendada</span></span></li>
+  <li><span class="toc-num">9</span><span class="toc-title">Procedimento — Cooperativas e oficinas<span class="toc-desc">Entidade contratual versus técnico executante</span></span></li>
+  <li><span class="toc-num">10</span><span class="toc-title">Boas práticas<span class="toc-desc">Recomendações consolidadas para a operação diária</span></span></li>
+  <li><span class="toc-num">11</span><span class="toc-title">Checklist operacional<span class="toc-desc">Lista de verificação para liberação de cadastro</span></span></li>
+  <li><span class="toc-num">12</span><span class="toc-title">Indicadores<span class="toc-desc">Métricas de acompanhamento e metas iniciais sugeridas</span></span></li>
+  <li><span class="toc-num">13</span><span class="toc-title">Roadmap<span class="toc-desc">Fases seguintes ao entregável do hackathon</span></span></li>
+</ol>
+</div>
+
+<!-- ==================== 1. OBJETIVO ==================== -->
+<h1><span class="chapter-num">Capítulo 1</span>Objetivo</h1>
+
+<p>
+Hoje, os dados de um mesmo técnico de campo existem em várias bases sem um elo formal entre elas:
+o <strong>OPS</strong> (sistema interno de operações da Infleet), o <strong>HubSpot</strong> (CRM comercial e de
+relacionamento), a <strong>BTime</strong> (sistema de ponto e alocação), o <strong>ClickUp</strong> (gestão de tarefas e
+tickets), o <strong>Drive de contratos</strong> (armazenamento dos PDFs assinados), o <strong>localizador/mapa</strong>
+(rastreamento de posição em campo) e o <strong>portal de formação</strong> (capacitação e certificação técnica).
+Cada uma dessas bases foi alimentada em momentos diferentes, por pessoas diferentes, sem um identificador
+único compartilhado.
+</p>
+
+<p>
+O resultado prático é cadastro duplicado, técnicos sem contrato vigente vinculado, divergência de CPF,
+telefone e cidade entre sistemas, e nenhuma visão consolidada de quem, de fato, compõe a rede de técnicos
+ativa da Infleet em um determinado momento.
+</p>
+
+<div class="callout">
+  <span class="callout-title">Objetivo deste POP</span>
+  <p>
+  Padronizar o processo de cadastro, identificação e reconciliação de técnicos de campo, estabelecendo o
+  OPS como fonte mestre de verdade e definindo regras claras de quando um técnico é o mesmo já cadastrado,
+  quando é um novo cadastro, e como tratar divergências entre sistemas — sem apagar histórico e sem
+  automatizar decisões que envolvam risco de erro.
+  </p>
+</div>
+
+<p>
+Este documento também organiza a base para as fases seguintes do programa, que não fazem parte do
+entregável do hackathon: gestão de agenda unificada e distribuição inteligente de chamados entre técnicos
+(ver Capítulo 13 — Roadmap). O hackathon entrega exclusivamente o saneamento e a reconciliação de cadastro.
+</p>
+
+<div class="callout note">
+  <span class="callout-title">Importante</span>
+  <p>
+  Este POP descreve um processo operacional, com etapas que hoje são majoritariamente manuais e conduzidas
+  por um operador humano. Onde uma automação ou integração ainda não existe em produção, o texto identifica
+  isso explicitamente como <span class="tag">integração prevista</span> ou <span class="tag">mock / hipótese</span>.
+  </p>
+</div>
+
+<!-- ==================== 2. ESCOPO ==================== -->
+<h1><span class="chapter-num">Capítulo 2</span>Escopo</h1>
+
+<p>
+Este procedimento define o que entra e o que não entra na frente de trabalho de "Gestão da Rede de
+Técnicos". A delimitação é importante porque este programa convive com outras iniciativas em andamento
+na Infleet, em especial o aplicativo de campo do técnico, que é conduzido de forma independente pela
+equipe de Produto.
+</p>
+
+<h2>Dentro do escopo</h2>
+<ul>
+  <li><strong>Cadastro do técnico</strong> — criação, atualização e inativação do registro do técnico no OPS.</li>
+  <li><strong>Identidade e documentação</strong> — validação de CPF/CNPJ, vínculo do contrato em PDF ao cadastro.</li>
+  <li><strong>Classificação do prestador</strong> — autônomo, cooperativa ou oficina, e o vínculo com a entidade contratual correspondente.</li>
+  <li><strong>Reconciliação entre sistemas</strong> — identificação de que um registro em HubSpot, BTime ou ClickUp corresponde ao mesmo técnico já existente no OPS.</li>
+  <li><strong>Tratamento de divergências</strong> — CPF, telefone, nome, cidade, status e duplicidade entre bases.</li>
+  <li><strong>Disponibilidade agregada</strong> — visão consolidada de quantos técnicos estão ativos, pendentes ou sem contrato, como insumo para relatórios de operação.</li>
+</ul>
+
+<h2>Fora do escopo</h2>
+<ul>
+  <li><strong>Aplicativo de campo do técnico</strong> — o app usado pelo técnico em campo (check-in, execução de OS, evidências fotográficas) é iniciativa própria da equipe de Produto e não é alterado por este POP.</li>
+  <li><strong>Distribuição de chamados</strong> e <strong>agenda unificada</strong> — fazem parte do roadmap futuro (Capítulo 13), não deste procedimento.</li>
+  <li><strong>Regras de remuneração, pontuação ou performance</strong> do técnico — tratadas em outros processos da área comercial e de operações.</li>
+  <li><strong>Gestão de conteúdo do portal de formação</strong> — este POP apenas referencia a existência da certificação como dado de contexto, não define como ela é produzida.</li>
+</ul>
+
+<div class="callout">
+  <span class="callout-title">Por que essa fronteira importa</span>
+  <p>
+  Manter o escopo restrito a cadastro e reconciliação evita que a operação tente resolver, num único
+  processo, problemas que pertencem a times diferentes. A base de cadastro única e confiável construída
+  aqui é o que viabiliza, depois, as fases de agenda e distribuição — mas construir essas fases não é
+  responsabilidade deste procedimento.
+  </p>
+</div>
+
+<!-- ==================== 3. CONCEITOS ==================== -->
+<h1><span class="chapter-num">Capítulo 3</span>Conceitos</h1>
+
+<p>
+Esta seção define os termos usados ao longo do documento. Os exemplos citados (Rafael Moreira da Silva
+e Cooperativa Agro Sul) são fictícios e reaproveitados em todo o material do programa para manter
+consistência entre o playbook e o protótipo de tela.
+</p>
+
+<dl class="glossary">
+  <dt>Técnico</dt>
+  <dd>Pessoa física que executa serviços de campo para a Infleet ou para um cliente contratante, independente do tipo de vínculo contratual. É a unidade despachável — quem efetivamente vai a campo, entra em agenda e é avaliado por atendimento.</dd>
+
+  <dt>Entidade Contratual</dt>
+  <dd>Parte que assina o contrato e é responsável pelo faturamento: pode ser o próprio técnico autônomo, uma cooperativa ou uma oficina. Nem sempre a entidade contratual é, ela mesma, um técnico executante — ver exemplo da Cooperativa Agro Sul abaixo.</dd>
+
+  <dt>Autônomo</dt>
+  <dd>Técnico que contrata diretamente com a Infleet ou com o cliente, sem intermediação de cooperativa ou oficina. Nesse caso, entidade contratual e técnico executante costumam ser a mesma pessoa.</dd>
+
+  <dt>Cooperativa</dt>
+  <dd>Entidade contratual que representa um grupo de técnicos. Tem um representante legal, responsável pela relação comercial e contratual, que não é necessariamente um dos técnicos despachados a campo.</dd>
+
+  <dt>Oficina</dt>
+  <dd>Entidade contratual do tipo estabelecimento, que pode ter um ou mais técnicos vinculados executando serviços em nome da oficina.</dd>
+
+  <dt>OPS</dt>
+  <dd>Sistema interno de operações da Infleet. Neste POP, é definido como a <strong>fonte mestre</strong> de cadastro de técnicos — a base contra a qual as demais são reconciliadas.</dd>
+
+  <dt>HubSpot</dt>
+  <dd>CRM comercial da Infleet, usado também para abrir e acompanhar tickets de contratação de técnicos ainda não formalizados.</dd>
+
+  <dt>BTime</dt>
+  <dd>Sistema de ponto, jornada e alocação de técnicos, hoje alimentado com dados próprios que nem sempre coincidem com os do OPS.</dd>
+
+  <dt>Crosswalk</dt>
+  <dd>Tabela ou estrutura de referência que relaciona o identificador de um mesmo técnico entre diferentes sistemas (por exemplo, ID no OPS ↔ ID de contato no HubSpot ↔ ID de colaborador na BTime), permitindo saber que os três registros representam a mesma pessoa.</dd>
+
+  <dt>Match (forte / intermediário / fraco)</dt>
+  <dd>Grau de confiança de que dois registros, em bases diferentes, representam o mesmo técnico. Classificado como forte, intermediário ou fraco conforme os campos que coincidem — ver critério detalhado no Capítulo 7.</dd>
+
+  <dt>Divergência</dt>
+  <dd>Situação em que campos que deveriam ser iguais entre sistemas (CPF, telefone, nome, cidade, status) não coincidem, exigindo tratamento manual antes de qualquer sincronização — ver Capítulo 8.</dd>
+</dl>
+
+<div class="callout">
+  <span class="callout-title">Exemplo ilustrativo — Entidade Contratual x Técnico executante</span>
+  <p>
+  A <strong>Cooperativa Agro Sul</strong> é uma entidade contratual (CNPJ mascarado <span class="mono">XX.XXX.XXX/0001-00</span>),
+  representada por <strong>João da Silva</strong>. João é o contato fiscal e contratual — assina o contrato,
+  responde pela cooperativa — mas não executa serviços de campo. Os técnicos executantes vinculados à
+  cooperativa são <strong>Rafael, Carlos, Marcos e André</strong>: são eles que entram na agenda, recebem
+  chamados e são avaliados. Cadastrar João como técnico despachável, só porque ele assinou o contrato,
+  é um erro comum que este POP busca evitar (ver Capítulo 9).
+  </p>
+</div>
+
+<!-- ==================== 4. PRINCÍPIOS DA OPERAÇÃO ==================== -->
+<h1><span class="chapter-num">Capítulo 4</span>Princípios da operação</h1>
+
+<p>
+Estes princípios orientam qualquer decisão tomada durante o cadastro, a reconciliação ou o tratamento de
+divergências. Quando um passo do procedimento e um princípio parecerem entrar em conflito, o princípio
+prevalece.
+</p>
+
+<h2>OPS como fonte mestre</h2>
+<p>
+O OPS é o sistema de referência para identidade do técnico. Qualquer informação divergente encontrada em
+outro sistema é comparada contra o OPS, nunca o contrário. Alterações de identidade nascem no OPS antes de
+se propagarem para os demais sistemas.
+</p>
+
+<h2>Cadastro único</h2>
+<p>
+Cada técnico tem exatamente um cadastro no OPS. Antes de criar um novo registro, é obrigatório pesquisar
+se ele já existe, ainda que sob grafia, telefone ou base diferente.
+</p>
+
+<h2>Não duplicar</h2>
+<p>
+Encontrar um técnico com nome parecido, mesmo CPF ou mesmo telefone em outra base é sinal para investigar
+match, não para criar um segundo cadastro. Duplicidade identificada é tratada como divergência (Capítulo 8).
+</p>
+
+<h2>Não apagar histórico — inativar em vez de excluir</h2>
+<p>
+Nenhum cadastro de técnico é excluído do OPS. Um técnico que deixa a rede, ou um cadastro criado por
+engano, é marcado como <strong>inativo</strong>, preservando o histórico de atendimentos e o rastro de
+auditoria associado a ele.
+</p>
+
+<h2>Validação antes de alterar</h2>
+<p>
+Nenhuma alteração de identidade (CPF, nome, entidade contratual) é aplicada sem antes confirmar, com
+evidência documental, que a mudança é legítima.
+</p>
+
+<h2>Rastreabilidade</h2>
+<p>
+Toda decisão de match, divergência ou alteração de cadastro registra quem validou e quando, para permitir
+auditoria posterior.
+</p>
+
+<h2>Segurança dos dados</h2>
+<p>
+Dados pessoais do técnico (CPF, contatos) são tratados conforme a LGPD: acesso restrito a quem precisa
+para a operação, documentos exibidos com CPF mascarado sempre que possível, e nenhum compartilhamento de
+dado pessoal fora do necessário para a validação em curso.
+</p>
+
+<h2>Sincronização unidirecional</h2>
+<div class="callout note">
+  <span class="callout-title">Regra crítica</span>
+  <p>
+  A sincronização automática de cadastro segue apenas o sentido <strong>OPS → HubSpot</strong> e
+  <strong>OPS → BTime</strong>. Nenhuma alteração feita diretamente no HubSpot ou na BTime é propagada de
+  volta ao OPS automaticamente. Uma divergência encontrada nesses sistemas é tratada como sinal de
+  investigação manual, não como atualização automática de origem (integração prevista para as fases de
+  sincronização — ver Capítulo 13).
+  </p>
+</div>
+
+<!-- ==================== 5. NOVO TÉCNICO ==================== -->
+<h1><span class="chapter-num">Capítulo 5</span>Procedimento — Novo técnico</h1>
+
+<p>
+Este procedimento se aplica quando um contrato chega para um técnico que pode ou não já existir em alguma
+das bases da Infleet. O objetivo é garantir que o cadastro final seja único e corretamente vinculado, antes
+de habilitar o técnico nos demais sistemas.
+</p>
+
+<ol class="step-list">
+  <li><span class="step-n">1</span><strong>Receber o contrato</strong><p>O contrato assinado chega por e-mail, Drive compartilhado ou upload direto na fila de processamento de contratos.</p></li>
+  <li><span class="step-n">2</span><strong>Anexar o PDF ao registro de processamento</strong><p>O arquivo é anexado à fila de contratos pendentes, preservando o documento original como evidência.</p></li>
+  <li><span class="step-n">3</span><strong>Extrair as informações do contrato</strong><p>Nome completo, CPF/CNPJ, tipo de prestador, cidade e dados de contato são identificados no documento. <span class="tag">integração prevista</span> — leitura automática assistida por IA ainda não está em produção; hoje a extração é manual ou semiautomática.</p></li>
+  <li><span class="step-n">4</span><strong>Pesquisar o técnico nas bases existentes</strong><p>Buscar por nome, CPF/CNPJ, telefone e cidade no OPS, HubSpot e BTime antes de qualquer decisão de cadastro.</p></li>
+  <li><span class="step-n">5</span><strong>Validar se é a mesma pessoa</strong><p>Comparar os campos extraídos do contrato com os registros encontrados, aplicando os critérios de match do Capítulo 7.</p></li>
+  <li><span class="step-n">6</span><strong>Selecionar o técnico correto</strong><p>Quando houver correspondência (match confirmado), selecionar o cadastro já existente em vez de criar um novo.</p></li>
+  <li><span class="step-n">7</span><strong>Vincular ao cadastro do OPS</strong><p>Associar o contrato processado ao cadastro definitivo do técnico no OPS, seja ele novo ou pré-existente.</p></li>
+  <li><span class="step-n">8</span><strong>Classificar o tipo de prestador</strong><p>Definir se o técnico é autônomo, ou se atua vinculado a uma cooperativa ou oficina.</p></li>
+  <li><span class="step-n">9</span><strong>Vincular à entidade contratual, quando aplicável</strong><p>Se o técnico pertence a uma cooperativa ou oficina, associar o cadastro do técnico à entidade contratual correspondente (ver Capítulo 9).</p></li>
+  <li><span class="step-n">10</span><strong>Confirmar o cadastro no HubSpot</strong><p>Propagar a informação do OPS para o HubSpot, garantindo que o contato comercial reflita o técnico já validado.</p></li>
+  <li><span class="step-n">11</span><strong>Aguardar ou sinalizar a sincronização com a BTime</strong><p>A propagação para a BTime segue o mesmo sentido unidirecional do princípio de sincronização. <span class="tag">integração prevista</span> — API de sincronização automática com a BTime ainda não está em produção; hoje o sinal é registrado para acompanhamento manual.</p></li>
+  <li><span class="step-n">12</span><strong>Validar o status final</strong><p>Confirmar que o técnico aparece como ativo e corretamente vinculado nos três sistemas antes de liberar o cadastro.</p></li>
+  <li><span class="step-n">13</span><strong>Registrar a conclusão</strong><p>Marcar o item da fila como concluído, com data, operador responsável e evidências anexadas, para fins de auditoria.</p></li>
+</ol>
+
+<!-- ==================== 6. TÉCNICO SEM CONTRATO ==================== -->
+<h1><span class="chapter-num">Capítulo 6</span>Procedimento — Técnico sem contrato</h1>
+
+<p>
+Aplica-se quando um técnico é identificado atuando ou sendo referenciado em alguma base (por exemplo,
+aparece no localizador de mapa, é citado em um chamado, ou é indicado por um cliente) sem que exista
+contrato assinado localizado nas bases da Infleet.
+</p>
+
+<ol class="step-list">
+  <li><span class="step-n">1</span><strong>Identificar o técnico sem contrato</strong><p>A ausência de contrato é detectada durante a reconciliação de rotina ou por sinalização de campo.</p></li>
+  <li><span class="step-n">2</span><strong>Não considerar contrato confirmado</strong><p>Até que o documento assinado seja localizado, o técnico permanece marcado como sem vínculo contratual confirmado — não é despachado como se tivesse contrato ativo.</p></li>
+  <li><span class="step-n">3</span><strong>Gerar ticket no HubSpot</strong><p>Abrir um ticket de contratação, registrando os dados já conhecidos do técnico e o motivo da pendência.</p></li>
+  <li><span class="step-n">4</span><strong>Acompanhar a contratação</strong><p>O ticket é acompanhado pela área responsável até que o processo de contratação avance.</p></li>
+  <li><span class="step-n">5</span><strong>Receber o contrato</strong><p>Quando o contrato é assinado, ele entra na fila de processamento (retomando o fluxo do Capítulo 5 a partir do passo 2).</p></li>
+  <li><span class="step-n">6</span><strong>Validar o contrato recebido</strong><p>Conferir se os dados do contrato correspondem ao técnico que originou o ticket.</p></li>
+  <li><span class="step-n">7</span><strong>Cadastrar ou regularizar no OPS</strong><p>Criar o cadastro definitivo, ou atualizar o cadastro provisório existente, com os dados validados do contrato.</p></li>
+  <li><span class="step-n">8</span><strong>Vincular aos demais sistemas</strong><p>Propagar o cadastro regularizado para HubSpot e sinalizar a sincronização com a BTime, seguindo o Capítulo 5.</p></li>
+  <li><span class="step-n">9</span><strong>Encerrar o ticket</strong><p>Fechar o ticket de contratação no HubSpot, registrando a conclusão da regularização.</p></li>
+</ol>
+
+<h2>Status do funil de contratação</h2>
+<table>
+<thead>
+<tr><th>Status</th><th>Descrição</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="status-pill st-gray">Aguardando contratação</span></td><td>Técnico identificado, ticket ainda não aberto ou recém-aberto.</td></tr>
+<tr><td><span class="status-pill st-amber">Em análise</span></td><td>Ticket aberto, dados do técnico em conferência.</td></tr>
+<tr><td><span class="status-pill st-blue">Contratação iniciada</span></td><td>Processo comercial/jurídico de contratação em andamento.</td></tr>
+<tr><td><span class="status-pill st-blue">Contrato recebido</span></td><td>PDF assinado recebido, aguardando validação.</td></tr>
+<tr><td><span class="status-pill st-blue">Validado</span></td><td>Dados do contrato conferidos e aprovados.</td></tr>
+<tr><td><span class="status-pill st-amber">Cadastro regularizado</span></td><td>Técnico cadastrado ou atualizado no OPS.</td></tr>
+<tr><td><span class="status-pill st-green">Concluído</span></td><td>Ticket encerrado, técnico vinculado aos sistemas.</td></tr>
+</tbody>
+</table>
+
+<!-- ==================== 7. RECONCILIAÇÃO ==================== -->
+<h1><span class="chapter-num">Capítulo 7</span>Procedimento — Reconciliação</h1>
+
+<p>
+Reconciliar significa determinar, com um grau de confiança explícito, se um registro encontrado em
+HubSpot, BTime ou ClickUp corresponde ao mesmo técnico já cadastrado no OPS. O procedimento classifica
+cada correspondência potencial em três níveis.
+</p>
+
+<h2>Match forte</h2>
+<p>
+CPF ou CNPJ idênticos entre os sistemas comparados, ou coincidência de identificador interno já existente
+em um crosswalk. Nível de confiança suficiente para vincular automaticamente o registro, sem necessidade
+de validação manual adicional — desde que não haja nenhuma outra divergência associada.
+</p>
+
+<h2>Match intermediário</h2>
+<p>
+Coincidência de telefone, e-mail, ou de nome combinado com cidade, sem confirmação de CPF/CNPJ. Requer
+revisão de um operador antes de ser confirmado como o mesmo técnico.
+</p>
+
+<h2>Match fraco</h2>
+<p>
+Nome semelhante, abreviação (por exemplo, "R. Moreira" para "Rafael Moreira"), inversão de sobrenomes ou
+grafia diferente, sem nenhum outro campo coincidente. Match fraco nunca é assumido automaticamente — vai
+sempre para a fila de validação manual.
+</p>
+
+<div class="callout danger">
+  <span class="callout-title">Regra de segurança</span>
+  <p>
+  Sempre que houver risco de falso positivo — ou seja, de vincular um registro ao técnico errado — a
+  decisão não é automatizada. O caso é enviado para a fila de validação manual, mesmo que o percentual de
+  confiança calculado seja alto.
+  </p>
+</div>
+
+<h2>Ações disponíveis ao operador</h2>
+<ul>
+  <li><strong>Confirmar</strong> — aceitar o match sugerido como o mesmo técnico.</li>
+  <li><strong>Rejeitar</strong> — recusar o match sugerido, tratando os registros como pessoas distintas.</li>
+  <li><strong>Indicar o cadastro correto</strong> — apontar manualmente qual cadastro do OPS corresponde ao registro em análise, quando a sugestão automática estiver errada.</li>
+  <li><strong>Criar novo vínculo</strong> — registrar a correspondência no crosswalk após confirmação.</li>
+  <li><strong>Marcar divergência</strong> — sinalizar um campo inconsistente para tratamento conforme o Capítulo 8.</li>
+  <li><strong>Adicionar observação</strong> — registrar contexto adicional para consulta futura ou auditoria.</li>
+</ul>
+
+<h2>Exemplo — Rafael Moreira da Silva</h2>
+<p>
+O caso a seguir ilustra um match provável com um ponto de atenção, tal como aparece na fila de
+reconciliação.
+</p>
+
+<table>
+<thead>
+<tr><th>Campo</th><th>Contrato (PDF)</th><th>OPS</th><th>HubSpot</th><th>BTime</th></tr>
+</thead>
+<tbody>
+<tr><td>Nome</td><td>Rafael Moreira da Silva</td><td>Rafael Moreira</td><td>R. Moreira</td><td>MOREIRA, RAFAEL</td></tr>
+<tr><td>CPF</td><td class="mono">XXX.XXX.XXX-00</td><td class="mono">XXX.XXX.XXX-00</td><td class="mono">XXX.XXX.XXX-00</td><td>Não informado</td></tr>
+<tr><td>Cidade</td><td>Salvador/BA</td><td>Salvador/BA</td><td>Salvador/BA</td><td>Lauro de Freitas</td></tr>
+<tr><td>Telefone</td><td>(informado no contrato)</td><td>Coincide com o contrato</td><td><span class="status-pill st-amber">Divergente</span></td><td>Não informado</td></tr>
+<tr><td>Status</td><td>—</td><td><span class="status-pill st-green">Ativo</span></td><td>Ativo</td><td>Ativo</td></tr>
+</tbody>
+</table>
+
+<div class="callout ok">
+  <span class="callout-title">Resultado da reconciliação</span>
+  <p>
+  <strong>Match provável — 96%.</strong> CPF idêntico entre contrato, OPS e HubSpot; nome semelhante
+  (abreviação e ordem de grafia compatíveis); cidade compatível ou próxima (Salvador e Lauro de Freitas
+  integram a mesma região metropolitana). O telefone divergente entre OPS e HubSpot é o ponto de atenção
+  registrado para o operador confirmar ou marcar como divergência antes de fechar o vínculo definitivo.
+  </p>
+</div>
+
+<!-- ==================== 8. DIVERGÊNCIAS ==================== -->
+<h1><span class="chapter-num">Capítulo 8</span>Procedimento — Divergências</h1>
+
+<p>
+Uma divergência é um campo que deveria representar a mesma informação em dois ou mais sistemas, mas não
+coincide. O tratamento varia conforme o tipo de campo divergente.
+</p>
+
+<table>
+<thead>
+<tr><th>Tipo de divergência</th><th>Descrição</th><th>Ação recomendada</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>CPF divergente</strong></td><td>O mesmo técnico aparece com números de CPF diferentes entre sistemas.</td><td>Tratar como prioridade <span class="prio-alta">Alta</span>. Suspender vínculo automático e solicitar confirmação documental antes de qualquer sincronização.</td></tr>
+<tr><td><strong>Telefone divergente</strong></td><td>Número de contato diferente entre OPS, HubSpot ou BTime.</td><td>Prioridade <span class="prio-media">Média</span>. Confirmar com o técnico ou com a entidade contratual qual número está correto e atualizar o OPS como origem.</td></tr>
+<tr><td><strong>Nome divergente</strong></td><td>Grafia, abreviação ou ordem de sobrenomes diferente entre bases.</td><td>Prioridade <span class="prio-baixa">Baixa</span> quando os demais campos coincidem. Registrar como variação conhecida no crosswalk.</td></tr>
+<tr><td><strong>Status divergente</strong></td><td>Técnico consta ativo em um sistema e inativo em outro.</td><td>Prioridade <span class="prio-alta">Alta</span>. Investigar a origem da mudança de status antes de despachar o técnico.</td></tr>
+<tr><td><strong>Duplicidade</strong></td><td>Mais de um cadastro no OPS representando o mesmo técnico.</td><td>Prioridade <span class="prio-media">Média</span>. Consolidar em um único cadastro ativo, inativando o duplicado sem apagar histórico.</td></tr>
+<tr><td><strong>Vínculo contratual ausente</strong></td><td>Técnico identificado em algum sistema sem contrato localizado.</td><td>Encaminhar para o procedimento do Capítulo 6 (técnico sem contrato).</td></tr>
+</tbody>
+</table>
+
+<h2>Status do fluxo de tratamento</h2>
+<table>
+<thead>
+<tr><th>Status</th><th>Descrição</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="status-pill st-red">Nova</span></td><td>Divergência recém-identificada, ainda não avaliada.</td></tr>
+<tr><td><span class="status-pill st-amber">Em análise</span></td><td>Operador investigando a causa e reunindo evidências.</td></tr>
+<tr><td><span class="status-pill st-blue">Aguardando informação</span></td><td>Pendente de confirmação externa (técnico, entidade contratual ou outra área).</td></tr>
+<tr><td><span class="status-pill st-green">Resolvida</span></td><td>Causa identificada e cadastro corrigido conforme a fonte mestre.</td></tr>
+<tr><td><span class="status-pill st-gray">Rejeitada</span></td><td>Após investigação, a divergência não se confirma como erro real.</td></tr>
+</tbody>
+</table>
+
+<!-- ==================== 9. COOPERATIVAS E OFICINAS ==================== -->
+<h1><span class="chapter-num">Capítulo 9</span>Procedimento — Cooperativas e oficinas</h1>
+
+<p>
+Quando a entidade contratual é uma cooperativa ou uma oficina, é preciso manter separados dois papéis que
+o contrato às vezes mistura na prática: quem responde legal e financeiramente pelo contrato, e quem
+efetivamente presta o serviço em campo.
+</p>
+
+<div class="callout">
+  <span class="callout-title">Regra central deste capítulo</span>
+  <p>
+  O representante de uma cooperativa ou o responsável por uma oficina <strong>não deve ser tratado
+  automaticamente como técnico despachável</strong>. Ele só é cadastrado como técnico executante se ele
+  próprio, comprovadamente, também presta serviços de campo — e nesse caso é cadastrado nos dois papéis,
+  de forma explícita e não por padrão do sistema.
+  </p>
+</div>
+
+<p>
+No exemplo de referência deste programa, a <strong>Cooperativa Agro Sul</strong> é a entidade contratual,
+representada por <strong>João da Silva</strong>. João assina o contrato e é o contato fiscal, mas não
+aparece na agenda de despacho. Os técnicos executantes — <strong>Rafael, Carlos, Marcos e André</strong> —
+são cadastrados individualmente no OPS e vinculados à Cooperativa Agro Sul como sua entidade contratual.
+</p>
+
+<h2>Por que essa separação importa</h2>
+<ul>
+  <li>Evita que um representante comercial seja despachado por engano para um chamado de campo.</li>
+  <li>Mantém a pontuação e o histórico de atendimento associados a quem de fato executou o serviço.</li>
+  <li>Permite faturar corretamente pela entidade contratual, mesmo quando múltiplos técnicos prestam serviço sob o mesmo contrato.</li>
+  <li>Evita duplicidade quando o mesmo nome aparece tanto como contato comercial quanto como candidato a técnico em outra base.</li>
+</ul>
+
+<h2>Procedimento resumido</h2>
+<ol>
+  <li>Ao processar um contrato de cooperativa ou oficina, cadastrar a entidade contratual separadamente do(s) técnico(s).</li>
+  <li>Identificar, junto ao contrato ou ao representante, quais pessoas físicas efetivamente executam o serviço.</li>
+  <li>Cadastrar cada técnico executante individualmente no OPS, com vínculo à entidade contratual.</li>
+  <li>Cadastrar o representante apenas como contato da entidade contratual, a menos que ele também execute serviços — nesse caso, avaliar o cadastro duplo explicitamente.</li>
+</ol>
+
+<!-- ==================== 10. BOAS PRÁTICAS ==================== -->
+<h1><span class="chapter-num">Capítulo 10</span>Boas práticas</h1>
+
+<p>
+Recomendações consolidadas para reduzir erro humano e manter a integridade da base ao longo do tempo.
+</p>
+
+<ul>
+  <li>Sempre anexar o PDF do contrato ao processar um técnico — o documento é a evidência de origem de qualquer cadastro.</li>
+  <li>Nunca criar um técnico novo sem antes pesquisar se ele já existe em alguma base.</li>
+  <li>Validar CPF/CNPJ antes de confirmar qualquer cadastro ou vínculo.</li>
+  <li>Quando o match for confirmado, sempre selecionar o técnico correto já existente, em vez de criar um segundo registro.</li>
+  <li>Nunca cadastrar um técnico diretamente na BTime ou no HubSpot antes de ele existir no OPS — o OPS é sempre a origem.</li>
+  <li>Não tratar o representante de uma cooperativa ou oficina como técnico despachável por padrão.</li>
+  <li>Nunca apagar um cadastro de técnico — usar inativação, preservando o histórico.</li>
+  <li>Registrar toda decisão manual de match ou divergência, com justificativa e operador responsável.</li>
+  <li>Evitar qualquer alteração de identidade sem evidência documental que a sustente.</li>
+  <li>Não compartilhar dados pessoais do técnico além do necessário para a validação em curso — manter CPF mascarado sempre que possível.</li>
+  <li>Conferir divergências pendentes antes de sincronizar um cadastro com HubSpot ou BTime.</li>
+  <li>Usar a fila de pendências do OPS para acompanhar casos em aberto — evitar controle paralelo em planilha ou WhatsApp.</li>
+  <li>Registrar sempre quem validou cada decisão, para permitir auditoria posterior.</li>
+</ul>
+
+<!-- ==================== 11. CHECKLIST OPERACIONAL ==================== -->
+<h1><span class="chapter-num">Capítulo 11</span>Checklist operacional</h1>
+
+<p>
+Lista de verificação a ser percorrida antes de considerar um cadastro de técnico liberado para uso pela
+operação. Recomenda-se conferir todos os itens antes de encerrar um caso na fila.
+</p>
+
+<ul class="checklist">
+  <li><span class="box">☐</span>Contrato em PDF anexado ao processo</li>
+  <li><span class="box">☐</span>CPF/CNPJ validado</li>
+  <li><span class="box">☐</span>Técnico pesquisado nas bases existentes (OPS, HubSpot, BTime)</li>
+  <li><span class="box">☐</span>Match realizado e classificado (forte, intermediário ou fraco)</li>
+  <li><span class="box">☐</span>Tipo de prestador definido (autônomo, cooperativa ou oficina)</li>
+  <li><span class="box">☐</span>Entidade contratual vinculada, quando aplicável</li>
+  <li><span class="box">☐</span>Cadastro no OPS validado</li>
+  <li><span class="box">☐</span>Relacionamento com HubSpot confirmado</li>
+  <li><span class="box">☐</span>Relacionamento com BTime confirmado ou sinalizado</li>
+  <li><span class="box">☐</span>Divergências identificadas tratadas ou registradas</li>
+  <li><span class="box">☐</span>Auditoria registrada (operador, data, evidência)</li>
+  <li><span class="box">☐</span>Cadastro liberado para uso operacional</li>
+</ul>
+
+<!-- ==================== 12. INDICADORES ==================== -->
+<h1><span class="chapter-num">Capítulo 12</span>Indicadores</h1>
+
+<p>
+Indicadores sugeridos para acompanhamento da saúde do cadastro e do ritmo de reconciliação. As metas
+listadas são sugestões iniciais para orientar a operação a partir do hackathon — não representam
+compromisso formal já validado com a área de negócio.
+</p>
+
+<table>
+<thead>
+<tr><th>Indicador</th><th>O que mede</th><th>Meta sugerida (inicial)</th></tr>
+</thead>
+<tbody>
+<tr><td>% de técnicos reconciliados</td><td>Proporção da base com match confirmado entre sistemas.</td><td>≥ 95%</td></tr>
+<tr><td>% de contratos processados</td><td>Proporção de contratos recebidos já extraídos e vinculados a um cadastro.</td><td>≥ 90% em até 5 dias úteis da chegada</td></tr>
+<tr><td>Quantidade de divergências abertas</td><td>Casos pendentes de tratamento no Capítulo 8.</td><td>&lt; 10 em aberto simultaneamente</td></tr>
+<tr><td>Tempo médio de validação</td><td>Tempo entre um caso entrar na fila de reconciliação e ser confirmado ou rejeitado.</td><td>&lt; 2 dias úteis</td></tr>
+<tr><td>Quantidade de duplicidades identificadas</td><td>Cadastros duplicados encontrados no período.</td><td>Tendência de queda mês a mês</td></tr>
+<tr><td>Quantidade de técnicos sem contrato</td><td>Técnicos ativos em algum sistema sem contrato localizado.</td><td>&lt; 5% da base ativa</td></tr>
+<tr><td>Quantidade de falhas de sincronização</td><td>Casos em que a propagação OPS → HubSpot/BTime não se completou.</td><td>0 falhas em aberto por mais de 3 dias úteis</td></tr>
+<tr><td>Quantidade de tickets de contratação abertos</td><td>Tickets no HubSpot aguardando avanço no funil do Capítulo 6.</td><td>Sem meta fixa — acompanhar tendência</td></tr>
+<tr><td>Tempo médio de regularização</td><td>Tempo entre abertura do ticket de contratação e cadastro regularizado no OPS.</td><td>&lt; 15 dias corridos</td></tr>
+</tbody>
+</table>
+
+<div class="callout note">
+  <span class="callout-title">Nota sobre as metas</span>
+  <p>
+  Os valores acima são metas iniciais sugeridas com base em bom senso operacional, propostas como ponto de
+  partida para o programa. Devem ser revisadas com a área de Operações após os primeiros ciclos de uso
+  real dos indicadores.
+  </p>
+</div>
+
+<!-- ==================== 13. ROADMAP ==================== -->
+<h1><span class="chapter-num">Capítulo 13</span>Roadmap</h1>
+
+<p>
+O hackathon entrega a <strong>Fase 1</strong> deste roadmap: um protótipo funcional de saneamento e
+reconciliação de cadastro. As fases seguintes descrevem a direção pretendida do programa e não são
+compromissos de entrega — servem para situar o trabalho atual dentro de uma visão maior.
+</p>
+
+<div class="phase-block phase-current">
+  <div class="kicker">Fase 1 · Entregue no hackathon</div>
+  <h3>Saneamento e reconciliação de cadastro</h3>
+  <p>
+  Estabelece o OPS como fonte mestre, o procedimento de novo técnico, o tratamento de técnico sem
+  contrato, os critérios de match e o tratamento de divergências descritos neste documento. Entrega um
+  protótipo de tela para a fila de reconciliação e o cadastro consolidado de técnicos.
+  </p>
+</div>
+
+<div class="phase-block">
+  <div class="kicker">Fase 2 · Roadmap futuro</div>
+  <h3>Sincronização</h3>
+  <p>
+  Automatiza a propagação unidirecional OPS → HubSpot e OPS → BTime hoje feita manualmente
+  <span class="tag">integração prevista</span>, reduzindo o tempo entre validação de cadastro e
+  disponibilidade do técnico nos demais sistemas. Depois desta fase, torna-se possível confiar em relatórios
+  cruzados entre sistemas sem checagem manual constante.
+  </p>
+</div>
+
+<div class="phase-block">
+  <div class="kicker">Fase 3 · Roadmap futuro</div>
+  <h3>Agenda unificada</h3>
+  <p>
+  Consolida a disponibilidade do técnico — vinda de BTime, localizador e portal de formação — em uma
+  única visão de agenda por técnico. Depois desta fase, torna-se possível visualizar, em tempo real, quem
+  está disponível para um chamado.
+  </p>
+</div>
+
+<div class="phase-block">
+  <div class="kicker">Fase 4 · Roadmap futuro</div>
+  <h3>Distribuição inteligente</h3>
+  <p>
+  Usa a agenda unificada e o cadastro reconciliado para sugerir automaticamente o técnico mais adequado
+  para um chamado, considerando localização, disponibilidade e tipo de prestador. Depois desta fase,
+  torna-se possível reduzir o tempo de despacho manual.
+  </p>
+</div>
+
+<div class="phase-block">
+  <div class="kicker">Fase 5 · Roadmap futuro</div>
+  <h3>Otimização de custo, distância e qualidade</h3>
+  <p>
+  Incorpora critérios de custo, distância percorrida e histórico de qualidade de atendimento à distribuição
+  inteligente da Fase 4. Depois desta fase, a distribuição de chamados passa a equilibrar eficiência
+  operacional e experiência do cliente de forma sistemática.
+  </p>
+</div>
+
+<div class="callout">
+  <span class="callout-title">Leitura deste roadmap</span>
+  <p>
+  As Fases 2 a 5 dependem de uma base de cadastro confiável, que é exatamente o que a Fase 1 — objeto
+  deste POP e deste hackathon — estabelece. Nenhuma integração ou automação das fases futuras deve ser
+  apresentada como já disponível hoje.
+  </p>
+</div>
+
+</body>
+</html>
