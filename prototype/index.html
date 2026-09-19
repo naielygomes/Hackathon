@@ -133,8 +133,6 @@ tbody tr:last-child td{border-bottom:none;}
 .agenda-table td:first-child,.agenda-table th:first-child{position:sticky;left:0;background:var(--surface-2);min-width:170px;z-index:1;}
 .slot{border-radius:7px;padding:7px 8px;font-size:12px;background:var(--surface-2);border:1px solid var(--border-2);}
 .slot.empty{color:var(--text-faint);text-align:center;border-style:dashed;}
-.slot.conflict{background:var(--red-bg);border:1px solid var(--red-fg);color:var(--red-fg);cursor:pointer;font-weight:700;}
-.slot.conflict .app-line{font-weight:500;color:var(--red-fg);opacity:.9;}
 .slot b{display:block;font-size:12px;}
 .agenda-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
 /* ---------- Auditoria ---------- */
@@ -296,8 +294,7 @@ ul.reasons li{margin-bottom:4px;}
           <option value="5">5. Cooperativa</option>
           <option value="6">6. Duplicidade</option>
           <option value="7">7. Falha de sincronização</option>
-          <option value="8">8. Conflito de agenda</option>
-          <option value="9">9. Distribuição inteligente</option>
+          <option value="8">8. Distribuição inteligente</option>
         </select>
       </div>
       <button class="icon-btn" id="theme-toggle" title="Alternar tema"><svg class="ic"><use href="#i-moon"/></svg></button>
@@ -512,16 +509,16 @@ var TECNICOS = [
     sync:{ops:'sincronizado',hubspot:'sincronizado',btime:'sincronizado'} },
 
   { id:'tec-013', nome:'Marcos Paulo Teixeira', cidade:'Feira de Santana', tipo:'cooperativa', avaliacao:4.7, dispatchable:true,
-    cenario:8, cenarioLabel:'Cooperativa — membro (conflito de agenda)', origem:'cadastro manual', status:'regularizado', prioridade:'alta', tipoPendencia:'agenda', entidade:'ent-alfa',
+    cenario:8, cenarioLabel:'Cooperativa — membro', origem:'cadastro manual', status:'regularizado', prioridade:null, tipoPendencia:null, entidade:'ent-alfa',
     fontes:{ contrato:{nome:'Marcos Paulo Teixeira',cpf:'628.***.**9-04',telefone:'(75) 99022-6655',cidade:'Feira de Santana',status:'Ativo',entidade:'Cooperativa Técnica Alfa Ltda.'},
              ops:{nome:'Marcos Paulo Teixeira',cpf:'628.***.**9-04',telefone:'(75) 99022-6655',cidade:'Feira de Santana',status:'Ativo',entidade:'Cooperativa Técnica Alfa Ltda.'},
              hubspot:{nome:'Marcos Paulo Teixeira',cpf:'628.***.**9-04',telefone:'(75) 99022-6655',cidade:'Feira de Santana',status:'Ativo',entidade:'Cooperativa Técnica Alfa Ltda.'},
              btime:{nome:'Marcos Paulo Teixeira',cpf:'628.***.**9-04',telefone:'(75) 99022-6655',cidade:'Feira de Santana',status:'Ativo'} },
-    problema:'Cadastro consistente, mas a agenda tem dois compromissos marcados para o mesmo horário (10h).',
-    motivos:['CPF idêntico em todas as fontes','Vínculo ativo com a Cooperativa Técnica Alfa','Conflito identificado apenas na agenda, não no cadastro'],
+    problema:'Nenhuma divergência — cadastro consistente e vinculado à entidade contratual.',
+    motivos:['CPF idêntico em todas as fontes','Vínculo ativo com a Cooperativa Técnica Alfa'],
     confianca:{label:'Alto',valor:96}, acao:'estado_regularizado',
     sync:{ops:'sincronizado',hubspot:'sincronizado',btime:'sincronizado'},
-    agenda:{ '08h':{cliente:'Posto Vitória',servico:'Manutenção preventiva'}, '10h':[{cliente:'Mercado Bahia',servico:'Instalação de equipamento'},{cliente:'Farmácia Popular',servico:'Reparo urgente'}], '14h':null, '16h':{cliente:'Auto Peças Sul',servico:'Vistoria técnica'} } },
+    agenda:{ '08h':{cliente:'Posto Vitória',servico:'Manutenção preventiva'}, '10h':{cliente:'Mercado Bahia',servico:'Instalação de equipamento'}, '14h':null, '16h':{cliente:'Auto Peças Sul',servico:'Vistoria técnica'} } },
 
   { id:'tec-014', nome:'Diego Henrique Souza', cidade:'Feira de Santana', tipo:'cooperativa', avaliacao:4.5, dispatchable:true,
     cenario:8, cenarioLabel:'Cooperativa — membro', origem:'cadastro manual', status:'regularizado', prioridade:null, tipoPendencia:null, entidade:'ent-alfa',
@@ -653,7 +650,6 @@ var CONTRATOS = [
 ];
 
 var AUDITORIA = [
-  { texto:'Sincronização de agenda identificou conflito de horário — Marcos Paulo Teixeira (10h)', data:offsetDate(-1,-40) },
   { texto:'Sincronização BTime de Kleberson Modesto Alves falhou', data:offsetDate(-1,-55) },
   { texto:'Rafael Costa Lima vinculado à Cooperativa Técnica Alfa', data:offsetDate(-2,-10) },
   { texto:'Contrato de Rafael Moreira da Silva processado — match forte confirmado (CPF idêntico)', data:offsetDate(-2,-30) },
@@ -710,10 +706,9 @@ function statusPill(status){
   var m = map[status] || ['gray', status];
   return '<span class="pill pill-'+m[0]+'">'+m[1]+'</span>';
 }
-function tipoPendLabel(t){ return {identidade:'Identidade',contrato:'Contrato',sincronizacao:'Sincronização',agenda:'Agenda'}[t] || t; }
+function tipoPendLabel(t){ return {identidade:'Identidade',contrato:'Contrato',sincronizacao:'Sincronização'}[t] || t; }
 
 function pendItemSubtitle(t){
-  if(t.tipoPendencia==='agenda') return 'Conflito de horário detectado na Agenda';
   if(t.status==='sem_contrato') return 'Encontrado no BTime/HubSpot · sem contrato no OPS';
   if(t.status==='duplicado') return 'Possível duplicidade com outro registro no OPS';
   if(t.status==='divergente') return t.problema;
@@ -796,7 +791,6 @@ function statusTitle(t){
     divergente:'Divergência de dados', divergente_status:'Divergência de status', orfao:'Técnico sem entidade contratual',
     incompleto:'Contrato incompleto', sync_falhou:'Falha de sincronização', sync_pendente:'Sincronização pendente',
     pendente_validacao:'Match para validação' }[t.status];
-  if(t.tipoPendencia==='agenda') return '🔴 CONFLITO — '+t.nome+' (10h)';
   return (pre || t.cenarioLabel) + ' — ' + t.nome;
 }
 
@@ -893,9 +887,7 @@ function renderAgenda(){
     HORARIOS.forEach(function(h){
       var v = t.agenda[h];
       if(!v){ html += '<td><div class="slot empty">livre</div></td>'; }
-      else if(Array.isArray(v)){
-        html += '<td><div class="slot conflict" data-conflict="'+t.id+'|'+h+'">🔴 CONFLITO DETECTADO'+v.map(function(a){return '<div class="app-line">'+esc(a.cliente)+' · '+esc(a.servico)+'</div>';}).join('')+'</div></td>';
-      } else {
+      else {
         html += '<td><div class="slot"><b>'+esc(v.cliente)+'</b>'+esc(v.servico)+'</div></td>';
       }
     });
@@ -904,11 +896,6 @@ function renderAgenda(){
   html += '</tbody>';
   document.getElementById('agenda-table').innerHTML = html;
 }
-document.getElementById('agenda-table').addEventListener('click', function(e){
-  var c=e.target.closest('[data-conflict]'); if(!c) return;
-  var parts = c.dataset.conflict.split('|');
-  openConflitoDetalhe(parts[0], parts[1]);
-});
 document.getElementById('btn-encontrar-tecnico').addEventListener('click', function(){ openEncontrarTecnico(); });
 
 /* ============================= AUDITORIA ============================= */
@@ -1390,29 +1377,6 @@ function confirmarMatchThiago(t){
   showToast(t.nome+' regularizado como '+novoId+'! Confira a Agenda.');
 }
 
-/* ============================= AGENDA: conflito ============================= */
-function openConflitoDetalhe(tecId, horario){
-  var t = byId(tecId); var apps = t.agenda[horario];
-  var html = '<div class="modal"><div class="modal-head"><svg class="ic"><use href="#i-alert-tri"/></svg><h3>Conflito de agenda — '+esc(t.nome)+'</h3><button class="close-x" data-close-modal><svg class="ic"><use href="#i-x"/></svg></button></div>'+
-    '<div class="modal-body">'+
-    '<div class="warn-box"><svg class="ic"><use href="#i-alert-tri"/></svg>Dois compromissos foram marcados para o mesmo horário ('+horario+').</div>'+
-    apps.map(function(a){ return '<div class="box" style="margin-bottom:8px"><b>'+esc(a.cliente)+'</b><div style="font-size:12px;color:var(--text-muted)">'+esc(a.servico)+' · '+horario+'</div></div>'; }).join('')+
-    '<div class="btn-row">'+
-      '<button class="btn btn-primary" id="conflito-continuar">Continuar mesmo assim</button>'+
-      '<button class="btn" id="conflito-outro">Escolher outro técnico</button>'+
-    '</div></div></div>';
-  openModal(html);
-  document.getElementById('conflito-continuar').addEventListener('click', function(){
-    pushAudit('Conflito de agenda de '+t.nome+' ('+horario+') resolvido — decisão: continuar mesmo assim');
-    closeAllModals();
-  });
-  document.getElementById('conflito-outro').addEventListener('click', function(){
-    pushAudit('Conflito de agenda de '+t.nome+' ('+horario+') resolvido — decisão: escolher outro técnico');
-    closeAllModals();
-    openEncontrarTecnico();
-  });
-}
-
 /* ============================= ENCONTRAR TÉCNICO (distribuição inteligente) ============================= */
 var CIDADES_BA = ['Salvador','Feira de Santana','Camaçari','Lauro de Freitas','Simões Filho','Alagoinhas','Santo Amaro','Vitória da Conquista','Barreiras','Juazeiro'];
 var SERVICOS = ['Manutenção preventiva','Instalação de equipamento','Reparo urgente','Vistoria técnica'];
@@ -1447,9 +1411,8 @@ function runDistribuicao(){
     var seed = seededScore(t.id+cidade+servico+horario);
     var mesmaCidade = t.cidade===cidade;
     var dist = mesmaCidade ? (seed%12)+1 : 15+(seed%45);
-    var ocupado = t.agenda && t.agenda[horario] && !Array.isArray(t.agenda[horario]) ? false : (t.agenda && Array.isArray(t.agenda[horario]));
     var custo = 90 + (seed%80);
-    return { t:t, dist:dist, custo:custo, ocupado:!!ocupado };
+    return { t:t, dist:dist, custo:custo };
   }).sort(function(a,b){ return a.dist-b.dist; }).slice(0,3);
 
   var html = candidatos.map(function(c,i){
@@ -1458,42 +1421,24 @@ function runDistribuicao(){
       '<div class="reco-head"><div class="name-cell"><div class="avatar">'+initials(t.nome)+'</div><div><b>'+esc(t.nome)+'</b><div style="font-size:12px;color:var(--text-muted)">'+esc(t.cidade)+'</div></div></div>'+
       (i===0? '<span class="pill pill-blue">recomendado principal</span>':'')+
       '<span class="pill pill-green">habilitado</span></div>'+
-      '<div class="reco-stats"><span>📍 <b>'+c.dist+' km</b></span><span>⭐ <b>'+t.avaliacao.toFixed(1)+'</b></span><span>💰 <b>R$ '+c.custo+'</b> estimado</span><span>🕑 <b>'+(c.ocupado?'conflito em '+horario:'disponível '+horario)+'</b></span></div>'+
+      '<div class="reco-stats"><span>📍 <b>'+c.dist+' km</b></span><span>⭐ <b>'+t.avaliacao.toFixed(1)+'</b></span><span>💰 <b>R$ '+c.custo+'</b> estimado</span><span>🕑 <b>disponível '+horario+'</b></span></div>'+
       (i===0? '<div class="box" style="margin-top:10px"><b>Por que recomendamos '+esc(t.nome)+'?</b><ul class="reasons" style="margin-top:6px">'+
         '<li>Menor deslocamento entre os candidatos ('+c.dist+' km)</li>'+
         '<li>Disponibilidade compatível com o horário solicitado</li>'+
         '<li>Qualificação compatível com "'+esc(servico)+'"</li>'+
         '<li>Avaliação adequada ao padrão exigido ('+t.avaliacao.toFixed(1)+')</li>'+
       '</ul></div>' : '')+
-      '<div class="btn-row"><button class="btn btn-sm btn-primary" data-confirmar-tec="'+t.id+'" data-horario="'+horario+'" data-ocupado="'+(c.ocupado?'1':'0')+'">Confirmar este técnico</button></div>'+
+      '<div class="btn-row"><button class="btn btn-sm btn-primary" data-confirmar-tec="'+t.id+'" data-horario="'+horario+'">Confirmar este técnico</button></div>'+
     '</div>';
   }).join('');
   document.getElementById('reco-resultado').innerHTML = html;
   document.querySelectorAll('[data-confirmar-tec]').forEach(function(b){
     b.addEventListener('click', function(){
-      var tecId = b.dataset.confirmarTec, horario = b.dataset.horario, ocupado = b.dataset.ocupado==='1';
+      var tecId = b.dataset.confirmarTec, horario = b.dataset.horario;
       var t = byId(tecId);
-      if(ocupado){
-        confirmarComRiscoConflito(t, horario);
-      } else {
-        pushAudit('Agendamento confirmado para '+t.nome+' às '+horario+' via distribuição inteligente');
-        closeAllModals();
-      }
+      pushAudit('Agendamento confirmado para '+t.nome+' às '+horario+' via distribuição inteligente');
+      closeAllModals();
     });
-  });
-}
-function confirmarComRiscoConflito(t, horario){
-  var html = '<div class="modal"><div class="modal-head"><svg class="ic"><use href="#i-alert-tri"/></svg><h3>Risco de conflito</h3><button class="close-x" data-close-modal><svg class="ic"><use href="#i-x"/></svg></button></div>'+
-    '<div class="modal-body"><div class="warn-box"><svg class="ic"><use href="#i-alert-tri"/></svg>Atenção — este técnico possui outro atendimento próximo ao horário solicitado ('+horario+').</div>'+
-    '<div class="btn-row"><button class="btn btn-primary" id="risco-continuar">Continuar mesmo assim</button><button class="btn" id="risco-outro">Escolher outro técnico</button></div></div></div>';
-  openModal(html);
-  document.getElementById('risco-continuar').addEventListener('click', function(){
-    pushAudit('Agendamento de '+t.nome+' às '+horario+' confirmado apesar do risco de conflito');
-    closeAllModals();
-  });
-  document.getElementById('risco-outro').addEventListener('click', function(){
-    pushAudit('Risco de conflito para '+t.nome+' às '+horario+' — usuário optou por escolher outro técnico');
-    closeAllModals(); openEncontrarTecnico();
   });
 }
 
@@ -1513,8 +1458,7 @@ function applyDemoScenario(n){
     case '5': setView('rede'); setTimeout(function(){ openPainel('tec-011'); },0); break;
     case '6': setView('central'); setTimeout(function(){ openPainel('tec-008'); },0); break;
     case '7': setView('central'); setTimeout(function(){ openPainel('tec-020'); },0); break;
-    case '8': setView('agenda'); setTimeout(function(){ openConflitoDetalhe('tec-013','10h'); },0); break;
-    case '9': setView('agenda'); setTimeout(function(){ openEncontrarTecnico(); },0); break;
+    case '8': setView('agenda'); setTimeout(function(){ openEncontrarTecnico(); },0); break;
   }
 }
 
