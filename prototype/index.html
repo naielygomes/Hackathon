@@ -1,0 +1,1466 @@
+<title>Rede de Técnicos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #041947;
+    --navy-hover: #0a2560;
+    --bg: #F2F4F7;
+    --card: #FFFFFF;
+    --border: #E5E7EB;
+    --border-soft: #EAECF0;
+    --text: #27272A;
+    --text-2: #344054;
+    --text-muted: #667085;
+    --text-muted-2: #71717A;
+    --accent: #4B6BF5;
+    --accent-hover: #3B57D9;
+    --accent-soft: #EEF1FE;
+    --success-bg: #F0FDF4; --success-text: #15803D; --success-dot: #22C55E;
+    --warn-bg: #FFFBEB; --warn-text: #B45309; --warn-dot: #F59E0B;
+    --error-bg: #FEF2F2; --error-text: #BE123C; --error-dot: #E11D48;
+    --info-bg: #EFF6FF; --info-text: #1D4ED8; --info-dot: #3B82F6;
+    --neutral-bg: #F4F4F5; --neutral-text: #52525B; --neutral-dot: #A1A1AA;
+    --shadow-sm: 0 1px 2px rgba(16,24,40,0.06);
+    --shadow-md: 0 4px 16px rgba(16,24,40,0.12);
+    --radius: 8px;
+    --sidebar-w: 220px;
+    --overlay-bg: rgba(4,25,71,0.45);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101423;
+      --card: #171B2C;
+      --border: #2A2F42;
+      --border-soft: #262B3D;
+      --text: #EDEEF5;
+      --text-2: #D2D5E4;
+      --text-muted: #98A0B8;
+      --text-muted-2: #8A91A8;
+      --accent: #6B85FF;
+      --accent-hover: #8398FF;
+      --accent-soft: #1C2440;
+      --success-bg: rgba(21,128,61,0.18); --success-text: #4ADE80; --success-dot: #22C55E;
+      --warn-bg: rgba(180,83,9,0.18); --warn-text: #FBBF24; --warn-dot: #F59E0B;
+      --error-bg: rgba(190,18,60,0.18); --error-text: #FB7185; --error-dot: #E11D48;
+      --info-bg: rgba(29,78,216,0.2); --info-text: #60A5FA; --info-dot: #3B82F6;
+      --neutral-bg: #21263A; --neutral-text: #B4B9CC; --neutral-dot: #7D8499;
+      --overlay-bg: rgba(2,10,30,0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101423;
+    --card: #171B2C;
+    --border: #2A2F42;
+    --border-soft: #262B3D;
+    --text: #EDEEF5;
+    --text-2: #D2D5E4;
+    --text-muted: #98A0B8;
+    --text-muted-2: #8A91A8;
+    --accent: #6B85FF;
+    --accent-hover: #8398FF;
+    --accent-soft: #1C2440;
+    --success-bg: rgba(21,128,61,0.18); --success-text: #4ADE80; --success-dot: #22C55E;
+    --warn-bg: rgba(180,83,9,0.18); --warn-text: #FBBF24; --warn-dot: #F59E0B;
+    --error-bg: rgba(190,18,60,0.18); --error-text: #FB7185; --error-dot: #E11D48;
+    --info-bg: rgba(29,78,216,0.2); --info-text: #60A5FA; --info-dot: #3B82F6;
+    --neutral-bg: #21263A; --neutral-text: #B4B9CC; --neutral-dot: #7D8499;
+    --overlay-bg: rgba(2,10,30,0.6);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4, p { margin: 0; }
+  button { font-family: inherit; }
+  table { border-collapse: collapse; width: 100%; }
+
+  .app-shell { display: flex; min-height: 100vh; align-items: stretch; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: var(--navy);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 22px 20px 14px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sidebar-logo .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--accent); flex-shrink: 0; }
+  .sidebar-nav { list-style: none; margin: 6px 0; padding: 0 10px; flex: 1; }
+  .sidebar-nav li { margin-bottom: 2px; }
+  .nav-link {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; border: none; background: transparent; cursor: pointer;
+    color: rgba(255,255,255,0.72);
+    padding: 9px 10px; border-radius: 6px; font-size: 13px; font-weight: 500;
+    text-align: left;
+  }
+  .nav-link svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .nav-link.active { background: var(--accent); color: #fff; }
+  .sidebar-footer {
+    padding: 14px 16px 18px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .phase-note { font-size: 10.5px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .phase-steps { display: flex; gap: 4px; margin-bottom: 12px; }
+  .phase-step { flex: 1; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.18); }
+  .phase-step.done { background: var(--accent); }
+  .user-chip { display: flex; align-items: center; gap: 9px; }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 999px; background: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .user-chip .who { min-width: 0; }
+  .user-chip .name { font-size: 12.5px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-chip .role { font-size: 11px; color: rgba(255,255,255,0.55); }
+
+  /* ---------- Main ---------- */
+  .main-wrap { flex: 1; min-width: 0; }
+  .main { padding: 28px 32px; padding-block: 28px; max-width: 1280px; margin: 0 auto; }
+  .view-header { margin-bottom: 22px; }
+  .view-header h1 { font-size: 24px; font-weight: 500; color: var(--text); }
+  .view-header p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+  .view[hidden] { display: none; }
+
+  /* ---------- Cards / generic ---------- */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .card-pad { padding: 18px 20px; }
+  .section-title { font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 2px; }
+  .section-sub { font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px; }
+
+  /* ---------- Pills / badges ---------- */
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    border-radius: 999px; padding: 3px 10px; font-size: 11px; font-weight: 600;
+    white-space: nowrap;
+  }
+  .pill .dot { width: 6px; height: 6px; border-radius: 999px; flex-shrink: 0; }
+  .pill-success { background: var(--success-bg); color: var(--success-text); }
+  .pill-success .dot { background: var(--success-dot); }
+  .pill-warn { background: var(--warn-bg); color: var(--warn-text); }
+  .pill-warn .dot { background: var(--warn-dot); }
+  .pill-error { background: var(--error-bg); color: var(--error-text); }
+  .pill-error .dot { background: var(--error-dot); }
+  .pill-info { background: var(--info-bg); color: var(--info-text); }
+  .pill-info .dot { background: var(--info-dot); }
+  .pill-neutral { background: var(--neutral-bg); color: var(--neutral-text); }
+  .pill-neutral .dot { background: var(--neutral-dot); }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text-2);
+    padding: 7px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  }
+  .btn svg { width: 14px; height: 14px; }
+  .btn:hover { background: var(--bg); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-danger { background: var(--card); border-color: #F0B7C2; color: var(--error-text); }
+  .btn-danger:hover { background: var(--error-bg); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-muted); }
+  .btn-ghost:hover { background: var(--bg); }
+  .btn-sm { padding: 4px 9px; font-size: 11.5px; }
+  .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+  /* ---------- Stat tiles ---------- */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+  .stat-tile { padding: 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .stat-tile .top-row { display: flex; align-items: center; justify-content: space-between; }
+  .stat-tile .icon-badge {
+    width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .stat-tile .icon-badge svg { width: 16px; height: 16px; }
+  .stat-num { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .badge-success { background: var(--success-bg); color: var(--success-text); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn-text); }
+  .badge-error { background: var(--error-bg); color: var(--error-text); }
+  .badge-info { background: var(--info-bg); color: var(--info-text); }
+  .badge-neutral { background: var(--neutral-bg); color: var(--neutral-text); }
+
+  /* ---------- Two column dashboard layout ---------- */
+  .dash-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: start; }
+
+  .attn-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .attn-item {
+    display: flex; align-items: center; gap: 12px; padding: 11px 12px;
+    border: 1px solid var(--border-soft); border-radius: 7px; background: var(--bg);
+  }
+  .attn-item .emoji { font-size: 15px; }
+  .attn-item .txt { flex: 1; min-width: 0; }
+  .attn-item .txt .main-t { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+  .attn-item .txt .sub-t { font-size: 11.5px; color: var(--text-muted); }
+  .attn-item .count { font-size: 15px; font-weight: 700; color: var(--text); }
+
+  .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .donut-legend { list-style: none; padding: 0; margin: 0; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+  .donut-legend li { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-2); }
+  .donut-legend .sw { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+  .donut-legend .val { margin-left: auto; font-weight: 700; color: var(--text); }
+
+  /* ---------- Flow trail ---------- */
+  .flow-trail { display: flex; align-items: center; gap: 0; margin-bottom: 18px; overflow-x: auto; padding-bottom: 4px; }
+  .flow-step { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .flow-step .bubble {
+    width: 22px; height: 22px; border-radius: 999px; background: var(--neutral-bg); color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0;
+    border: 2px solid var(--border);
+  }
+  .flow-step.done .bubble { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .flow-step.current .bubble { background: var(--card); color: var(--accent); border-color: var(--accent); }
+  .flow-step .lbl { font-size: 11.5px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+  .flow-step.done .lbl, .flow-step.current .lbl { color: var(--text-2); }
+  .flow-sep { width: 26px; height: 2px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
+  .flow-sep.done { background: var(--accent); }
+
+  /* ---------- Tables ---------- */
+  .table-scroll { overflow-x: auto; width: 100%; }
+  .data-table { min-width: 640px; }
+  .data-table th {
+    text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px;
+    color: var(--text-muted); font-weight: 600; padding: 9px 12px; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-soft); font-size: 12.5px; color: var(--text-2); vertical-align: middle; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:hover { background: var(--bg); }
+  .row-clickable { cursor: pointer; }
+  .mono { font-family: "SFMono-Regular", Consolas, monospace; font-size: 12px; color: var(--text-muted-2); }
+  .cell-name { font-weight: 600; color: var(--text); }
+  .cell-sub { font-size: 11px; color: var(--text-muted); }
+  .cell-diverge { background: var(--error-bg) !important; border-radius: 4px; }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  .search-box { position: relative; flex: 1; min-width: 180px; max-width: 320px; }
+  .search-box svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--text-muted); }
+  .search-box input {
+    width: 100%; padding: 8px 10px 8px 32px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text); font-size: 12.5px; font-family: inherit;
+  }
+  select.filter-select {
+    padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card);
+    color: var(--text-2); font-size: 12.5px; font-family: inherit;
+  }
+  .chip-filter { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+  .chip-filter button {
+    border: 1px solid var(--border); background: var(--card); color: var(--text-muted);
+    padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .chip-filter button.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+  /* ---------- Drawer / modal ---------- */
+  .overlay {
+    position: fixed; inset: 0; background: var(--overlay-bg); z-index: 50;
+    display: flex; justify-content: flex-end;
+  }
+  .overlay[hidden] { display: none; }
+  .drawer {
+    width: 420px; max-width: 92vw; height: 100vh; background: var(--card);
+    box-shadow: var(--shadow-md); overflow-y: auto; padding: 22px 22px 40px;
+  }
+  .drawer-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+  .drawer-head h3 { font-size: 17px; font-weight: 600; color: var(--text); }
+  .drawer-head p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .drawer-close { border: none; background: var(--bg); border-radius: 999px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); flex-shrink: 0; }
+  .drawer-close svg { width: 15px; height: 15px; }
+  .drawer-block { margin-bottom: 18px; }
+  .drawer-block h4 { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
+  .kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+  .kv-grid .kv-item .k { font-size: 11px; color: var(--text-muted); }
+  .kv-grid .kv-item .v { font-size: 12.5px; color: var(--text-2); font-weight: 600; margin-top: 1px; }
+  .sys-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-soft); }
+  .sys-row:last-child { border-bottom: none; }
+  .sys-row .sname { font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+
+  /* ---------- Contract cards ---------- */
+  .contract-card { border: 1px solid var(--border-soft); border-radius: 7px; margin-bottom: 10px; overflow: hidden; }
+  .contract-summary { display: flex; align-items: center; gap: 12px; padding: 13px 15px; cursor: pointer; background: var(--card); }
+  .contract-summary .file-icon { width: 32px; height: 32px; border-radius: 7px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .contract-summary .file-icon svg { width: 16px; height: 16px; }
+  .contract-summary .meta { flex: 1; min-width: 0; }
+  .contract-summary .fname { font-size: 12.5px; font-weight: 600; color: var(--text); word-break: break-all; }
+  .contract-summary .fsub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+  .contract-summary .chev { color: var(--text-muted); transition: transform .15s ease; flex-shrink: 0; }
+  .contract-summary .chev svg { width: 16px; height: 16px; }
+  .contract-card.open .chev { transform: rotate(90deg); }
+  .contract-detail { display: none; padding: 4px 15px 16px; border-top: 1px solid var(--border-soft); background: var(--bg); }
+  .contract-card.open .contract-detail { display: block; }
+  .extract-table th, .extract-table td { font-size: 12px; }
+  .conf-bar { width: 60px; height: 5px; border-radius: 999px; background: var(--border); overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 6px; }
+  .conf-bar span { display: block; height: 100%; background: var(--accent); }
+
+  /* ---------- Reconciliation ---------- */
+  .recon-compare { overflow-x: auto; }
+  .recon-table { min-width: 720px; }
+  .recon-table th { text-align: left; font-size: 11px; text-transform: uppercase; color: var(--text-muted); padding: 9px 12px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .recon-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-soft); font-size: 12.5px; color: var(--text-2); }
+  .recon-table td.field-name { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .result-banner { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding: 16px 18px; border-radius: 8px; background: var(--success-bg); margin-top: 16px; }
+  .result-banner .score { font-size: 22px; font-weight: 700; color: var(--success-text); }
+  .result-banner .rb-text { flex: 1; min-width: 220px; }
+  .result-banner .rb-text .lead { font-size: 13.5px; font-weight: 700; color: var(--success-text); }
+  .result-banner .rb-text ul { margin: 6px 0 0; padding-left: 18px; font-size: 12px; color: var(--text-2); }
+  .result-banner .rb-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .result-banner.resolved { background: var(--info-bg); }
+  .result-banner.rejected { background: var(--error-bg); }
+
+  /* ---------- Kanban (tickets) ---------- */
+  .kanban-scroll { overflow-x: auto; padding-bottom: 6px; }
+  .kanban { display: grid; grid-auto-flow: column; grid-auto-columns: 220px; gap: 12px; }
+  .kanban-col { background: var(--bg); border: 1px solid var(--border-soft); border-radius: 8px; padding: 10px; min-height: 140px; }
+  .kanban-col h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; color: var(--text-muted); margin-bottom: 10px; font-weight: 700; }
+  .kanban-card { background: var(--card); border: 1px solid var(--border-soft); border-radius: 6px; padding: 9px 10px; margin-bottom: 8px; box-shadow: var(--shadow-sm); }
+  .kanban-card .kt-name { font-size: 12.5px; font-weight: 600; color: var(--text); }
+  .kanban-card .kt-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ---------- Sync flow ---------- */
+  .sync-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .sync-node { flex: 1; min-width: 150px; border: 1px solid var(--border-soft); border-radius: 8px; padding: 14px; text-align: center; background: var(--bg); }
+  .sync-node .sn-title { font-size: 12.5px; font-weight: 700; color: var(--text-2); }
+  .sync-node .sn-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+  .sync-arrow { color: var(--text-muted); flex-shrink: 0; }
+  .sync-arrow svg { width: 20px; height: 20px; }
+  .unidirectional-note { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; background: var(--info-bg); border-radius: 7px; margin-bottom: 18px; }
+  .unidirectional-note svg { width: 16px; height: 16px; color: var(--info-text); flex-shrink: 0; margin-top: 1px; }
+  .unidirectional-note p { font-size: 12.5px; color: var(--info-text); font-weight: 500; }
+
+  /* ---------- Timeline (audit) ---------- */
+  .timeline { list-style: none; margin: 0; padding: 0; }
+  .tl-item { display: flex; gap: 14px; padding-bottom: 18px; position: relative; }
+  .tl-item:not(:last-child)::before { content: ""; position: absolute; left: 9px; top: 22px; bottom: 0; width: 1px; background: var(--border); }
+  .tl-dot { width: 20px; height: 20px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .tl-dot svg { width: 11px; height: 11px; }
+  .tl-body .tl-top { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .tl-body .tl-who { font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .tl-body .tl-time { font-size: 11px; color: var(--text-muted); }
+  .tl-body .tl-desc { font-size: 12.5px; color: var(--text-2); margin-top: 3px; }
+  .tl-body .tl-origin { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  /* ---------- Settings ---------- */
+  .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .role-row { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
+  .role-row:last-child { border-bottom: none; }
+  .role-row .rn { font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .role-row .rd { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; max-width: 320px; }
+  .integ-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--border-soft); gap: 10px; }
+  .integ-row:last-child { border-bottom: none; }
+  .integ-row .in { font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .integ-row .id { font-size: 11.5px; color: var(--text-muted); }
+
+  .divider { height: 1px; background: var(--border-soft); margin: 18px 0; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stack { display: flex; flex-direction: column; gap: 16px; }
+  .muted-note { font-size: 11.5px; color: var(--text-muted); display: flex; align-items: flex-start; gap: 6px; }
+  .muted-note svg { width: 13px; height: 13px; margin-top: 1px; flex-shrink: 0; }
+
+  /* ---------- Toasts ---------- */
+  #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 100; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .toast {
+    background: var(--navy); color: #fff; padding: 10px 16px; border-radius: 7px; font-size: 12.5px; font-weight: 600;
+    box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 8px; max-width: 320px;
+  }
+  .toast svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .toast.err { background: var(--error-text); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .dash-grid { grid-template-columns: 1fr; }
+    .settings-grid { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .app-shell { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: sticky; top: 0; flex-direction: column; z-index: 40; }
+    .sidebar-logo { padding: 14px 16px; }
+    .sidebar-nav { display: flex; overflow-x: auto; gap: 4px; padding: 4px 10px 10px; flex: none; }
+    .sidebar-nav li { margin-bottom: 0; flex-shrink: 0; }
+    .nav-link { white-space: nowrap; }
+    .sidebar-footer { display: none; }
+    .main { padding: 18px 16px; padding-block: 18px; }
+    .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .kv-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .stat-grid { grid-template-columns: 1fr; }
+    .view-header h1 { font-size: 20px; }
+  }
+</style>
+
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+<defs>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3.5" y="3.5" width="7" height="7" rx="1.2"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.2"/>
+    <rect x="3.5" y="13.5" width="7" height="7" rx="1.2"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.2"/>
+  </symbol>
+  <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 3.5h8l4 4V20a.5.5 0 0 1-.5.5h-11A.5.5 0 0 1 6 20V4a.5.5 0 0 1 .5-.5Z"/>
+    <path d="M14 3.5V8h4"/><path d="M9 12.5h6M9 15.5h6M9 9.5h2.5"/>
+  </symbol>
+  <symbol id="i-merge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="12" r="2.2"/>
+    <path d="M6 8.2v3.8a4 4 0 0 0 4 4h4.2M6 15.8v-3.8"/><path d="M16 10l2 2-2 2"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="9" cy="8" r="3.2"/><path d="M2.8 19.5c.6-3.4 3.1-5.5 6.2-5.5s5.6 2.1 6.2 5.5"/>
+    <circle cx="17" cy="8.5" r="2.4"/><path d="M16 14.3c2.2.2 3.8 1.9 4.3 4.2"/>
+  </symbol>
+  <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="3.5" width="11" height="17" rx="0.6"/><path d="M15 9.5h4.5a0.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H15"/>
+    <path d="M7.5 7.5h1M11 7.5h1M7.5 11h1M11 11h1M7.5 14.5h1M11 14.5h1M8 20.5v-3h3v3"/>
+  </symbol>
+  <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.6 4.1 2.9 18a1.5 1.5 0 0 0 1.3 2.2h15.6A1.5 1.5 0 0 0 21.1 18L13.4 4.1a1.5 1.5 0 0 0-2.8 0Z"/>
+    <path d="M12 9.5v4.2"/><circle cx="12" cy="17" r="0.9" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-user-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.8c.6-3.5 3.1-5.6 6.2-5.6s5.6 2.1 6.2 5.6"/>
+    <path d="M18.5 7.5v5.5M15.8 10.2h5.4"/>
+  </symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.5M20 4v4.5h-4.5"/>
+    <path d="M20 12a8 8 0 0 1-13.7 5.6L4 15.5M4 20v-4.5h4.5"/>
+  </symbol>
+  <symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12.5" r="8"/><path d="M12 8.3v4.5l3.2 2"/><path d="M12 4.5 10.5 2m1.5 2.5L13.5 2"/>
+  </symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.3-2-3.4-2.3.8a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.5 2.6a7.6 7.6 0 0 0-2.6 1.5l-2.3-.8-2 3.4 2 1.3a7.6 7.6 0 0 0 0 3l-2 1.3 2 3.4 2.3-.8c.75.66 1.63 1.17 2.6 1.5l.5 2.6h4l.5-2.6a7.6 7.6 0 0 0 2.6-1.5l2.3.8 2-3.4-2-1.3Z"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>
+  </symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 5.5 15.5 12 9 18.5"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.5 12.5 9.5 17.5 19.5 6.5"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 6l12 12M18 6 6 18"/>
+  </symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r="0.9" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3 4.5 5.8V11c0 5 3.2 8.3 7.5 10 4.3-1.7 7.5-5 7.5-10V5.8L12 3Z"/><path d="M9 12l2 2 4-4.2"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 12h15.5M14 6.5 19.5 12 14 17.5"/>
+  </symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 3 10.5 13.5M21 3l-6.8 18-4-8.2L2 8.8 21 3Z"/>
+  </symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="10.5" width="14" height="9.5" rx="1.4"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>
+  </symbol>
+</defs>
+</svg>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><span class="dot"></span>INFLEET</div>
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li><button class="nav-link active" data-view="dashboard"><svg><use href="#i-grid"/></svg>Dashboard</button></li>
+      <li><button class="nav-link" data-view="contratos"><svg><use href="#i-file-text"/></svg>Contratos</button></li>
+      <li><button class="nav-link" data-view="reconciliacao"><svg><use href="#i-merge"/></svg>Reconciliação</button></li>
+      <li><button class="nav-link" data-view="tecnicos"><svg><use href="#i-users"/></svg>Técnicos</button></li>
+      <li><button class="nav-link" data-view="entidades"><svg><use href="#i-building"/></svg>Entidades Contratuais</button></li>
+      <li><button class="nav-link" data-view="divergencias"><svg><use href="#i-alert-triangle"/></svg>Divergências</button></li>
+      <li><button class="nav-link" data-view="contratacoes"><svg><use href="#i-user-plus"/></svg>Contratações</button></li>
+      <li><button class="nav-link" data-view="sincronizacao"><svg><use href="#i-refresh"/></svg>Sincronização</button></li>
+      <li><button class="nav-link" data-view="auditoria"><svg><use href="#i-history"/></svg>Histórico/Auditoria</button></li>
+      <li><button class="nav-link" data-view="config"><svg><use href="#i-settings"/></svg>Configurações</button></li>
+    </ul>
+    <div class="sidebar-footer">
+      <div class="phase-note">Fase 1 de 4 · Cadastro &amp; reconciliação</div>
+      <div class="phase-steps">
+        <div class="phase-step done"></div><div class="phase-step"></div><div class="phase-step"></div><div class="phase-step"></div>
+      </div>
+      <div class="user-chip">
+        <div class="avatar">CP</div>
+        <div class="who">
+          <div class="name">Camila Prado</div>
+          <div class="role">camila@infleet.com.br</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <main class="main">
+
+      <!-- ================= DASHBOARD ================= -->
+      <section class="view" id="view-dashboard">
+        <div class="view-header">
+          <h1>Dashboard</h1>
+          <p>Visão geral da reconciliação da rede de técnicos entre Contrato, OPS, HubSpot e BTime.</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="card stat-tile">
+            <div class="top-row"><span class="stat-label">Técnicos mapeados</span><span class="icon-badge badge-neutral"><svg><use href="#i-users"/></svg></span></div>
+            <div class="stat-num">134</div>
+            <div class="stat-label">total identificado nas 4 fontes</div>
+          </div>
+          <div class="card stat-tile">
+            <div class="top-row"><span class="stat-label">Validados</span><span class="icon-badge badge-success"><svg><use href="#i-check"/></svg></span></div>
+            <div class="stat-num">87</div>
+            <div class="stat-label">match confirmado manualmente</div>
+          </div>
+          <div class="card stat-tile">
+            <div class="top-row"><span class="stat-label">Matches pendentes</span><span class="icon-badge badge-warn"><svg><use href="#i-merge"/></svg></span></div>
+            <div class="stat-num">22</div>
+            <div class="stat-label">aguardando validação humana</div>
+          </div>
+          <div class="card stat-tile">
+            <div class="top-row"><span class="stat-label">Sem vínculo contratual</span><span class="icon-badge badge-error"><svg><use href="#i-alert-triangle"/></svg></span></div>
+            <div class="stat-num">12</div>
+            <div class="stat-label">visto em operação, sem contrato no OPS</div>
+          </div>
+          <div class="card stat-tile">
+            <div class="top-row"><span class="stat-label">Divergências abertas</span><span class="icon-badge badge-error"><svg><use href="#i-alert-triangle"/></svg></span></div>
+            <div class="stat-num">5</div>
+            <div class="stat-label">CPF, telefone ou cidade</div>
+          </div>
+          <div class="card stat-tile">
+            <div class="top-row"><span class="stat-label">Contratos não processados</span><span class="icon-badge badge-info"><svg><use href="#i-file-text"/></svg></span></div>
+            <div class="stat-num">14</div>
+            <div class="stat-label">na fila de extração</div>
+          </div>
+          <div class="card stat-tile">
+            <div class="top-row"><span class="stat-label">Tickets de contratação</span><span class="icon-badge badge-info"><svg><use href="#i-user-plus"/></svg></span></div>
+            <div class="stat-num">9</div>
+            <div class="stat-label">abertos no HubSpot</div>
+          </div>
+          <div class="card stat-tile">
+            <div class="top-row"><span class="stat-label">Falhas de sincronização</span><span class="icon-badge badge-error"><svg><use href="#i-refresh"/></svg></span></div>
+            <div class="stat-num">3</div>
+            <div class="stat-label">na fila, aguardando reprocesso</div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="card card-pad">
+            <div class="section-title">O que precisa da minha atenção?</div>
+            <div class="section-sub">Itens priorizados para a equipe de Serviços revisar hoje.</div>
+            <ul class="attn-list">
+              <li class="attn-item">
+                <span class="emoji">🔴</span>
+                <div class="txt"><div class="main-t">Técnicos sem vínculo contratual</div><div class="sub-t">Vistos na base operacional, sem contrato registrado no OPS</div></div>
+                <span class="pill pill-error"><span class="dot"></span>Prioridade 1</span>
+                <span class="count">12</span>
+              </li>
+              <li class="attn-item">
+                <span class="emoji">🟡</span>
+                <div class="txt"><div class="main-t">Matches aguardando validação</div><div class="sub-t">Ex.: Rafael Moreira da Silva — 96% de confiança</div></div>
+                <span class="pill pill-warn"><span class="dot"></span>Prioridade 2</span>
+                <span class="count">22</span>
+              </li>
+              <li class="attn-item">
+                <span class="emoji">🟡</span>
+                <div class="txt"><div class="main-t">Divergências de CPF / telefone / cidade</div><div class="sub-t">Entre Contrato, OPS, HubSpot e BTime</div></div>
+                <span class="pill pill-warn"><span class="dot"></span>Prioridade 2</span>
+                <span class="count">5</span>
+              </li>
+              <li class="attn-item">
+                <span class="emoji">🔵</span>
+                <div class="txt"><div class="main-t">Contratos não processados</div><div class="sub-t">Aguardando extração estruturada dos PDFs</div></div>
+                <span class="pill pill-info"><span class="dot"></span>Prioridade 3</span>
+                <span class="count">14</span>
+              </li>
+              <li class="attn-item">
+                <span class="emoji">🟢</span>
+                <div class="txt"><div class="main-t">Técnicos validados este mês</div><div class="sub-t">Cadastro consolidado nas 4 fontes</div></div>
+                <span class="pill pill-success"><span class="dot"></span>Em dia</span>
+                <span class="count">87</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card card-pad">
+            <div class="section-title">Distribuição do status de reconciliação</div>
+            <div class="section-sub">126 técnicos com processo de reconciliação em curso</div>
+            <div class="donut-wrap">
+              <svg width="150" height="150" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="60" fill="none" stroke="var(--border-soft)" stroke-width="20"/>
+                <g transform="rotate(-90 70 70)">
+                  <circle cx="70" cy="70" r="60" fill="none" stroke="var(--success-dot)" stroke-width="20" stroke-dasharray="260.3 376.99" stroke-dashoffset="0"/>
+                  <circle cx="70" cy="70" r="60" fill="none" stroke="var(--warn-dot)" stroke-width="20" stroke-dasharray="65.8 376.99" stroke-dashoffset="-260.3"/>
+                  <circle cx="70" cy="70" r="60" fill="none" stroke="var(--error-dot)" stroke-width="20" stroke-dasharray="15.0 376.99" stroke-dashoffset="-326.1"/>
+                  <circle cx="70" cy="70" r="60" fill="none" stroke="var(--info-dot)" stroke-width="20" stroke-dasharray="35.9 376.99" stroke-dashoffset="-341.1"/>
+                </g>
+                <text x="70" y="66" text-anchor="middle" font-size="22" font-weight="700" fill="var(--text)">134</text>
+                <text x="70" y="82" text-anchor="middle" font-size="10" fill="var(--text-muted)">mapeados</text>
+              </svg>
+              <ul class="donut-legend">
+                <li><span class="sw" style="background:var(--success-dot)"></span>Validados <span class="val">87</span></li>
+                <li><span class="sw" style="background:var(--warn-dot)"></span>Pendentes <span class="val">22</span></li>
+                <li><span class="sw" style="background:var(--error-dot)"></span>Divergências <span class="val">5</span></li>
+                <li><span class="sw" style="background:var(--info-dot)"></span>Sem vínculo <span class="val">12</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CONTRATOS ================= -->
+      <section class="view" id="view-contratos" hidden>
+        <div class="view-header">
+          <h1>Contratos</h1>
+          <p>Fila de ingestão de contratos em PDF e extração estruturada de dados do técnico.</p>
+        </div>
+
+        <div class="card card-pad" style="margin-bottom:16px;">
+          <div class="muted-note"><svg><use href="#i-info"/></svg>
+            <span><strong>Mock de integração:</strong> a extração automática de campos a partir do PDF do contrato é simulada nesta demo. Em produção, um serviço de leitura via IA preencheria estes campos com nível de confiança por campo.</span>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="chip-filter" id="contract-filter">
+            <button class="active" data-status="todos">Todos (14)</button>
+            <button data-status="Não processado">Não processado</button>
+            <button data-status="Extraído">Extraído</button>
+            <button data-status="Vinculado">Vinculado</button>
+          </div>
+        </div>
+
+        <div id="contracts-list"></div>
+      </section>
+
+      <!-- ================= RECONCILIAÇÃO ================= -->
+      <section class="view" id="view-reconciliacao" hidden>
+        <div class="view-header">
+          <h1>Reconciliação</h1>
+          <p>Comparação campo a campo entre Contrato, OPS, HubSpot e BTime para sugerir e validar matches.</p>
+        </div>
+
+        <div class="flow-trail" id="flow-trail-recon"></div>
+
+        <div class="card card-pad" style="margin-bottom:20px;">
+          <div class="section-title">Exemplo: Rafael Moreira da Silva</div>
+          <div class="section-sub">Comparação entre as 4 fontes de dados · CPF sempre mascarado</div>
+
+          <div class="recon-compare">
+            <table class="recon-table">
+              <thead>
+                <tr><th>Campo</th><th>Contrato (PDF)</th><th>OPS</th><th>HubSpot</th><th>BTime</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="field-name">Nome</td>
+                  <td>Rafael Moreira da Silva</td>
+                  <td>Rafael Moreira</td>
+                  <td>R. Moreira</td>
+                  <td>MOREIRA, RAFAEL</td>
+                </tr>
+                <tr>
+                  <td class="field-name">CPF</td>
+                  <td class="mono">XXX.XXX.XXX-00</td>
+                  <td class="mono">XXX.XXX.XXX-00</td>
+                  <td class="mono">XXX.XXX.XXX-00</td>
+                  <td class="cell-diverge">Não identificado</td>
+                </tr>
+                <tr>
+                  <td class="field-name">Telefone</td>
+                  <td class="mono">(71) 9XXXX-XX12</td>
+                  <td class="mono">(71) 9XXXX-XX12</td>
+                  <td class="mono cell-diverge">(71) 9XXXX-XX87</td>
+                  <td>Não identificado</td>
+                </tr>
+                <tr>
+                  <td class="field-name">Cidade</td>
+                  <td>Salvador/BA</td>
+                  <td>Salvador/BA</td>
+                  <td>Salvador/BA</td>
+                  <td class="cell-diverge">Lauro de Freitas/BA</td>
+                </tr>
+                <tr>
+                  <td class="field-name">Entidade contratual</td>
+                  <td>Cooperativa Agro Sul</td>
+                  <td>Cooperativa Agro Sul</td>
+                  <td>Cooperativa Agro Sul</td>
+                  <td>Não identificado</td>
+                </tr>
+                <tr>
+                  <td class="field-name">Status</td>
+                  <td><span class="pill pill-neutral"><span class="dot"></span>—</span></td>
+                  <td><span class="pill pill-success"><span class="dot"></span>Ativo</span></td>
+                  <td><span class="pill pill-success"><span class="dot"></span>Ativo</span></td>
+                  <td><span class="pill pill-success"><span class="dot"></span>Ativo</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="result-banner" id="recon-result-banner">
+            <div class="score" id="recon-score">96%</div>
+            <div class="rb-text">
+              <div class="lead" id="recon-lead">Resultado sugerido: Match provável</div>
+              <ul>
+                <li>CPF idêntico entre Contrato, OPS e HubSpot</li>
+                <li>Nome semanticamente equivalente nas 4 fontes (variações de abreviação)</li>
+                <li>Cidade compatível/próxima (Salvador × Lauro de Freitas, região metropolitana)</li>
+                <li>Ponto de atenção: telefone divergente entre OPS e HubSpot</li>
+              </ul>
+            </div>
+            <div class="rb-actions">
+              <button class="btn btn-primary" onclick="handleReconAction('confirm')"><svg><use href="#i-check"/></svg>Confirmar match</button>
+              <button class="btn btn-danger" onclick="handleReconAction('reject')"><svg><use href="#i-x"/></svg>Rejeitar</button>
+              <button class="btn" onclick="handleReconAction('review')"><svg><use href="#i-send"/></svg>Enviar para análise</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="section-title">Fila de priorização</div>
+          <div class="section-sub">Técnicos e matches priorizados para ação da equipe de Serviços.</div>
+          <div class="toolbar">
+            <div class="chip-filter" id="priority-filter">
+              <button class="active" data-p="todos">Todas</button>
+              <button data-p="1">Prioridade 1</button>
+              <button data-p="2">Prioridade 2</button>
+              <button data-p="3">Prioridade 3</button>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table" id="priority-table">
+              <thead><tr><th>Prioridade</th><th>Técnico</th><th>Motivo</th><th>Confiança</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TÉCNICOS ================= -->
+      <section class="view" id="view-tecnicos" hidden>
+        <div class="view-header">
+          <h1>Técnicos</h1>
+          <p>Cadastro consolidado da rede de técnicos despacháveis, com status por sistema.</p>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <svg><use href="#i-search"/></svg>
+            <input type="text" id="tech-search" placeholder="Buscar por nome ou cidade..." oninput="renderTechnicians()">
+          </div>
+          <select class="filter-select" id="tech-status-filter" onchange="renderTechnicians()">
+            <option value="todos">Status: todos</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+          </select>
+          <select class="filter-select" id="tech-tipo-filter" onchange="renderTechnicians()">
+            <option value="todos">Tipo: todos</option>
+            <option value="Autônomo">Autônomo</option>
+            <option value="Cooperativa">Cooperativa</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <div class="table-scroll">
+            <table class="data-table" id="tech-table">
+              <thead>
+                <tr><th>Técnico</th><th>Tipo</th><th>Cidade</th><th>Sistemas</th><th>Status</th><th>Confiança do match</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <p class="muted-note" style="margin-top:10px;"><svg><use href="#i-info"/></svg>Mostrando amostra de 15 de 134 técnicos mapeados. Clique em uma linha para ver o detalhe completo.</p>
+      </section>
+
+      <!-- ================= ENTIDADES CONTRATUAIS ================= -->
+      <section class="view" id="view-entidades" hidden>
+        <div class="view-header">
+          <h1>Entidades Contratuais</h1>
+          <p>Autônomos e cooperativas/oficinas responsáveis pelos técnicos — separado da lista de técnicos despacháveis.</p>
+        </div>
+
+        <div class="card card-pad" style="margin-bottom:16px;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div>
+              <div class="section-title">Cooperativa Agro Sul</div>
+              <div class="section-sub">CNPJ <span class="mono">XX.XXX.XXX/0001-00</span> · Salvador/BA</div>
+            </div>
+            <span class="pill pill-info"><span class="dot"></span>Cooperativa</span>
+          </div>
+          <div class="kv-grid" style="margin-bottom:14px;">
+            <div class="kv-item"><div class="k">Representante legal</div><div class="v">João da Silva</div></div>
+            <div class="kv-item"><div class="k">Papel</div><div class="v">Contato fiscal / contratual</div></div>
+          </div>
+          <div class="muted-note" style="margin-bottom:12px;"><svg><use href="#i-info"/></svg>João da Silva é o representante da cooperativa perante a Infleet — ele <strong>não</strong> aparece na lista de técnicos despacháveis.</div>
+          <div class="section-title" style="font-size:12.5px;">Técnicos vinculados (4)</div>
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>Técnico</th><th>Cidade</th><th>Status</th><th>Confiança do match</th></tr></thead>
+              <tbody>
+                <tr><td class="cell-name">Rafael Moreira da Silva</td><td>Salvador/BA</td><td><span class="pill pill-warn"><span class="dot"></span>Match pendente</span></td><td>96%</td></tr>
+                <tr><td class="cell-name">Carlos Eduardo Bittencourt</td><td>Salvador/BA</td><td><span class="pill pill-success"><span class="dot"></span>Validado</span></td><td>99%</td></tr>
+                <tr><td class="cell-name">Marcos Vinícius Andrade</td><td>Camaçari/BA</td><td><span class="pill pill-success"><span class="dot"></span>Validado</span></td><td>97%</td></tr>
+                <tr><td class="cell-name">André Luiz Ferreira</td><td>Salvador/BA</td><td><span class="pill pill-success"><span class="dot"></span>Validado</span></td><td>98%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card card-pad" style="margin-bottom:16px;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div>
+              <div class="section-title">Cooperativa Litoral Sul</div>
+              <div class="section-sub">CNPJ <span class="mono">XX.XXX.XXX/0001-00</span> · Ilhéus/BA</div>
+            </div>
+            <span class="pill pill-info"><span class="dot"></span>Cooperativa</span>
+          </div>
+          <div class="kv-grid" style="margin-bottom:6px;">
+            <div class="kv-item"><div class="k">Representante legal</div><div class="v">Sandra Reis Almeida</div></div>
+            <div class="kv-item"><div class="k">Técnicos vinculados</div><div class="v">Patrícia Nunes Costa, Diego Ramalho Souza</div></div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="section-title">Todas as entidades contratuais</div>
+          <div class="section-sub">11 entidades mapeadas — cooperativas e autônomos cadastrados como sua própria entidade contratual.</div>
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>Entidade</th><th>Tipo</th><th>Representante</th><th>Nº técnicos vinculados</th></tr></thead>
+              <tbody>
+                <tr><td class="cell-name">Cooperativa Agro Sul</td><td><span class="pill pill-info"><span class="dot"></span>Cooperativa</span></td><td>João da Silva</td><td>4</td></tr>
+                <tr><td class="cell-name">Cooperativa Litoral Sul</td><td><span class="pill pill-info"><span class="dot"></span>Cooperativa</span></td><td>Sandra Reis Almeida</td><td>2</td></tr>
+                <tr><td class="cell-name">Michelle Soller</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+                <tr><td class="cell-name">Kleberson Modesto</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+                <tr><td class="cell-name">João Paulo Cardoso</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+                <tr><td class="cell-name">Newton Tadim</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+                <tr><td class="cell-name">Fernanda Aquino Reis</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+                <tr><td class="cell-name">Bruno Salgado Teixeira</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+                <tr><td class="cell-name">Elaine Cristina Rocha</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+                <tr><td class="cell-name">Thiago Bezerra Lins</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+                <tr><td class="cell-name">Vanessa Lima Cordeiro</td><td><span class="pill pill-neutral"><span class="dot"></span>Autônomo</span></td><td>—</td><td>1 (o próprio)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= DIVERGÊNCIAS ================= -->
+      <section class="view" id="view-divergencias" hidden>
+        <div class="view-header">
+          <h1>Divergências</h1>
+          <p>Inconsistências de dados entre as fontes, priorizadas para tratamento pela equipe de Serviços.</p>
+        </div>
+
+        <div class="toolbar">
+          <div class="chip-filter" id="diverg-filter">
+            <button class="active" data-s="todos">Todas (5)</button>
+            <button data-s="Nova">Nova</button>
+            <button data-s="Em análise">Em análise</button>
+            <button data-s="Aguardando informação">Aguardando informação</button>
+            <button data-s="Resolvida">Resolvida</button>
+            <button data-s="Rejeitada">Rejeitada</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-scroll">
+            <table class="data-table" id="diverg-table">
+              <thead>
+                <tr><th>Tipo</th><th>Técnico</th><th>Prioridade</th><th>Origem</th><th>Responsável</th><th>Data</th><th>Status</th><th>Ação recomendada</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CONTRATAÇÕES ================= -->
+      <section class="view" id="view-contratacoes" hidden>
+        <div class="view-header">
+          <h1>Contratações</h1>
+          <p>Tickets de contratação necessária — técnico visto em base operacional, sem contrato registrado no OPS.</p>
+        </div>
+        <div class="muted-note" style="margin-bottom:14px;"><svg><use href="#i-info"/></svg>Fluxo: Aguardando contratação → Em análise → Contratação iniciada → Contrato recebido → Validado → Cadastro regularizado → Concluído.</div>
+        <div class="kanban-scroll">
+          <div class="kanban" id="tickets-kanban"></div>
+        </div>
+      </section>
+
+      <!-- ================= SINCRONIZAÇÃO ================= -->
+      <section class="view" id="view-sincronizacao" hidden>
+        <div class="view-header">
+          <h1>Sincronização</h1>
+          <p>Fluxo de propagação do cadastro mestre do OPS para HubSpot e BTime.</p>
+        </div>
+
+        <div class="unidirectional-note">
+          <svg><use href="#i-info"/></svg>
+          <p>A sincronização é unidirecional: OPS → fila de sincronização → HubSpot + BTime. HubSpot e BTime nunca sobrescrevem o cadastro mestre no OPS automaticamente.</p>
+        </div>
+
+        <div class="sync-flow">
+          <div class="sync-node"><div class="sn-title">OPS</div><div class="sn-sub">Cadastro mestre</div></div>
+          <div class="sync-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="sync-node"><div class="sn-title">Fila de sincronização</div><div class="sn-sub">3 itens aguardando</div></div>
+          <div class="sync-arrow"><svg><use href="#i-arrow-right"/></svg></div>
+          <div class="sync-node"><div class="sn-title">HubSpot</div><div class="sn-sub"><span class="pill pill-success"><span class="dot"></span>128 sincronizados</span></div></div>
+          <div class="sync-node"><div class="sn-title">BTime</div><div class="sn-sub"><span class="pill pill-warn"><span class="dot"></span>3 falharam</span></div></div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="section-title">Eventos recentes</div>
+          <div class="section-sub">Log das últimas tentativas de sincronização com HubSpot e BTime.</div>
+          <div class="table-scroll">
+            <table class="data-table" id="sync-table">
+              <thead><tr><th>Técnico</th><th>Destino</th><th>Status</th><th>Última tentativa</th><th>Detalhe</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HISTÓRICO / AUDITORIA ================= -->
+      <section class="view" id="view-auditoria" hidden>
+        <div class="view-header">
+          <h1>Histórico e Auditoria</h1>
+          <p>Trilha de rastreabilidade de quem validou o quê, quando e a partir de qual origem.</p>
+        </div>
+
+        <div class="card card-pad" style="margin-bottom:16px;">
+          <div class="muted-note"><svg><use href="#i-lock"/></svg>
+            <span><strong>LGPD:</strong> CPF nunca é exibido por completo nesta tela (sempre mascarado, ex. <span class="mono">XXX.XXX.XXX-00</span>). Documentos de contrato são de acesso restrito — o link de origem indica apenas o nome do arquivo.</span>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <ul class="timeline" id="audit-timeline"></ul>
+        </div>
+      </section>
+
+      <!-- ================= CONFIGURAÇÕES ================= -->
+      <section class="view" id="view-config" hidden>
+        <div class="view-header">
+          <h1>Configurações</h1>
+          <p>Papéis de acesso, status das integrações e política de retenção de documentos.</p>
+        </div>
+
+        <div class="settings-grid">
+          <div class="card card-pad">
+            <div class="section-title">Papéis e permissões</div>
+            <div class="section-sub">Controle de acesso conceitual para a área de Gestão da Rede de Técnicos.</div>
+            <div class="role-row">
+              <div><div class="rn">Serviços</div><div class="rd">Valida matches, resolve divergências, acompanha contratações. Não vê CPF completo.</div></div>
+              <span class="pill pill-info"><span class="dot"></span>Operação</span>
+            </div>
+            <div class="role-row">
+              <div><div class="rn">Auditoria</div><div class="rd">Acesso somente leitura ao histórico completo e aos documentos de contrato.</div></div>
+              <span class="pill pill-neutral"><span class="dot"></span>Leitura</span>
+            </div>
+            <div class="role-row">
+              <div><div class="rn">Admin</div><div class="rd">Configura integrações, papéis e regras de reconciliação.</div></div>
+              <span class="pill pill-success"><span class="dot"></span>Full access</span>
+            </div>
+          </div>
+
+          <div class="card card-pad">
+            <div class="section-title">Status das integrações</div>
+            <div class="section-sub">Nenhuma integração externa está ativa em produção nesta demo.</div>
+            <div class="integ-row">
+              <div><div class="in">API BTime</div><div class="id">API aberta — integração futura viável para leitura de disponibilidade agregada</div></div>
+              <span class="pill pill-info"><span class="dot"></span>Integração prevista</span>
+            </div>
+            <div class="integ-row">
+              <div><div class="in">API HubSpot</div><div class="id">Consulta de tickets de contratação e propagação de cadastro</div></div>
+              <span class="pill pill-warn"><span class="dot"></span>Mock de integração</span>
+            </div>
+            <div class="integ-row">
+              <div><div class="in">Leitura automática de contratos (IA)</div><div class="id">Extração estruturada de campos a partir do PDF</div></div>
+              <span class="pill pill-info"><span class="dot"></span>Integração prevista</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad" style="margin-top:16px;">
+          <div class="section-title">Retenção e segurança de documentos</div>
+          <div class="section-sub">Nota conceitual para a etapa de contratos.</div>
+          <p style="font-size:12.5px; color:var(--text-2); line-height:1.6;">
+            PDFs de contrato ficam armazenados em bucket de acesso restrito, vinculados ao registro do técnico apenas por referência (nome do arquivo).
+            Dados sensíveis (CPF completo, dados bancários) nunca são exibidos nas telas de reconciliação — apenas o valor mascarado é propagado para OPS,
+            HubSpot e BTime. Acesso ao documento original é registrado na trilha de auditoria.
+          </p>
+        </div>
+
+        <div class="card card-pad" style="margin-top:16px;">
+          <div class="section-title">Evolução do produto</div>
+          <div class="section-sub">Fase 1 de 4 — visão conceitual das próximas etapas.</div>
+          <div class="flow-trail" style="overflow-x:auto;">
+            <div class="flow-step done"><span class="bubble">1</span><span class="lbl">Cadastro e reconciliação</span></div>
+            <div class="flow-sep"></div>
+            <div class="flow-step"><span class="bubble">2</span><span class="lbl">Agenda unificada</span></div>
+            <div class="flow-sep"></div>
+            <div class="flow-step"><span class="bubble">3</span><span class="lbl">Distribuição inteligente</span></div>
+            <div class="flow-sep"></div>
+            <div class="flow-step"><span class="bubble">4</span><span class="lbl">Otimização da rede</span></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div class="overlay" id="drawer-overlay" hidden onclick="if(event.target===this)closeDrawer()">
+  <div class="drawer" id="drawer-content"></div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============ DATA ============ */
+  var technicians = [
+    { id:"TEC-0001", nome:"Rafael Moreira da Silva", tipo:"Cooperativa", entidade:"Cooperativa Agro Sul", entidadeId:"ENT-0012", cidade:"Salvador/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(71) 9XXXX-XX12", sistemas:["OPS","HubSpot","BTime"], confianca:96, ultimaSync:"19/09/2026 08:14", hubspotId:"HS-88213", btimeId:"BT-40217", statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Ativo"}, matchStatus:"Match pendente" },
+    { id:"TEC-0002", nome:"Carlos Eduardo Bittencourt", tipo:"Cooperativa", entidade:"Cooperativa Agro Sul", entidadeId:"ENT-0012", cidade:"Salvador/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(71) 9XXXX-XX44", sistemas:["OPS","HubSpot","BTime"], confianca:99, ultimaSync:"18/09/2026 21:02", hubspotId:"HS-88214", btimeId:"BT-40218", statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Ativo"}, matchStatus:"Validado" },
+    { id:"TEC-0003", nome:"Marcos Vinícius Andrade", tipo:"Cooperativa", entidade:"Cooperativa Agro Sul", entidadeId:"ENT-0012", cidade:"Camaçari/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(71) 9XXXX-XX77", sistemas:["OPS","HubSpot","BTime"], confianca:97, ultimaSync:"18/09/2026 20:40", hubspotId:"HS-88215", btimeId:"BT-40219", statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Ativo"}, matchStatus:"Validado" },
+    { id:"TEC-0004", nome:"André Luiz Ferreira", tipo:"Cooperativa", entidade:"Cooperativa Agro Sul", entidadeId:"ENT-0012", cidade:"Salvador/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(71) 9XXXX-XX21", sistemas:["OPS","HubSpot","BTime"], confianca:98, ultimaSync:"18/09/2026 19:55", hubspotId:"HS-88216", btimeId:"BT-40220", statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Ativo"}, matchStatus:"Validado" },
+    { id:"TEC-0005", nome:"Patrícia Nunes Costa", tipo:"Cooperativa", entidade:"Cooperativa Litoral Sul", entidadeId:"ENT-0013", cidade:"Ilhéus/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(73) 9XXXX-XX09", sistemas:["OPS","HubSpot","BTime"], confianca:95, ultimaSync:"17/09/2026 11:20", hubspotId:"HS-88217", btimeId:"BT-40221", statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Ativo"}, matchStatus:"Validado" },
+    { id:"TEC-0006", nome:"Diego Ramalho Souza", tipo:"Cooperativa", entidade:"Cooperativa Litoral Sul", entidadeId:"ENT-0013", cidade:"Itabuna/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(73) 9XXXX-XX55", sistemas:["OPS","HubSpot"], confianca:93, ultimaSync:"17/09/2026 11:05", hubspotId:"HS-88218", btimeId:null, statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Não cadastrado"}, matchStatus:"Validado" },
+    { id:"TEC-0007", nome:"Michelle Soller", tipo:"Autônomo", entidade:"Michelle Soller", entidadeId:"ENT-0021", cidade:"Feira de Santana/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(75) 9XXXX-XX31", sistemas:["OPS","HubSpot","BTime"], confianca:99, ultimaSync:"19/09/2026 07:50", hubspotId:"HS-88219", btimeId:"BT-40222", statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Ativo"}, matchStatus:"Validado" },
+    { id:"TEC-0008", nome:"Kleberson Modesto", tipo:"Autônomo", entidade:"Kleberson Modesto", entidadeId:"ENT-0022", cidade:"Vitória da Conquista/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(77) 9XXXX-XX63", sistemas:["OPS","HubSpot"], confianca:64, ultimaSync:"16/09/2026 09:12", hubspotId:"HS-88220", btimeId:null, statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Não cadastrado"}, matchStatus:"Divergência" },
+    { id:"TEC-0009", nome:"João Paulo Cardoso", tipo:"Autônomo", entidade:"João Paulo Cardoso", entidadeId:"ENT-0023", cidade:"Lauro de Freitas/BA", status:"Ativo", cpf:"Não identificado", telefone:"(71) 9XXXX-XX90", sistemas:["BTime"], confianca:null, ultimaSync:"12/09/2026 15:30", hubspotId:null, btimeId:"BT-40224", statusSistemas:{OPS:"Não cadastrado",HubSpot:"Não cadastrado",BTime:"Ativo"}, matchStatus:"Contratação necessária" },
+    { id:"TEC-0010", nome:"Newton Tadim", tipo:"Autônomo", entidade:"Newton Tadim", entidadeId:"ENT-0024", cidade:"Simões Filho/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(71) 9XXXX-XX15", sistemas:["OPS","HubSpot","BTime"], confianca:88, ultimaSync:"15/09/2026 18:44", hubspotId:"HS-88221", btimeId:"BT-40225", statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Inativo"}, matchStatus:"Divergência" },
+    { id:"TEC-0011", nome:"Fernanda Aquino Reis", tipo:"Autônomo", entidade:"Fernanda Aquino Reis", entidadeId:"ENT-0025", cidade:"Salvador/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(71) 9XXXX-XX28", sistemas:["OPS","HubSpot","BTime"], confianca:98, ultimaSync:"19/09/2026 06:10", hubspotId:"HS-88222", btimeId:"BT-40226", statusSistemas:{OPS:"Ativo",HubSpot:"Ativo",BTime:"Ativo"}, matchStatus:"Validado" },
+    { id:"TEC-0012", nome:"Bruno Salgado Teixeira", tipo:"Autônomo", entidade:"Bruno Salgado Teixeira", entidadeId:"ENT-0026", cidade:"Cachoeira/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(75) 9XXXX-XX48", sistemas:["OPS","BTime"], confianca:70, ultimaSync:"14/09/2026 10:22", hubspotId:null, btimeId:"BT-40227", statusSistemas:{OPS:"Ativo",HubSpot:"Não cadastrado",BTime:"Ativo"}, matchStatus:"Divergência" },
+    { id:"TEC-0013", nome:"Elaine Cristina Rocha", tipo:"Autônomo", entidade:"Elaine Cristina Rocha", entidadeId:"ENT-0027", cidade:"Alagoinhas/BA", status:"Inativo", cpf:"XXX.XXX.XXX-00", telefone:"(75) 9XXXX-XX82", sistemas:["OPS","HubSpot","BTime"], confianca:99, ultimaSync:"02/08/2026 08:00", hubspotId:"HS-88223", btimeId:"BT-40228", statusSistemas:{OPS:"Inativo",HubSpot:"Inativo",BTime:"Inativo"}, matchStatus:"Validado" },
+    { id:"TEC-0014", nome:"Thiago Bezerra Lins", tipo:"Autônomo", entidade:"Thiago Bezerra Lins", entidadeId:"ENT-0028", cidade:"Ilhéus/BA", status:"Ativo", cpf:"Não identificado", telefone:"(73) 9XXXX-XX19", sistemas:["BTime"], confianca:null, ultimaSync:"10/09/2026 13:05", hubspotId:null, btimeId:"BT-40229", statusSistemas:{OPS:"Não cadastrado",HubSpot:"Não cadastrado",BTime:"Ativo"}, matchStatus:"Contratação necessária" },
+    { id:"TEC-0015", nome:"Vanessa Lima Cordeiro", tipo:"Autônomo", entidade:"Vanessa Lima Cordeiro", entidadeId:"ENT-0029", cidade:"Itabuna/BA", status:"Ativo", cpf:"XXX.XXX.XXX-00", telefone:"(73) 9XXXX-XX36", sistemas:["OPS","HubSpot"], confianca:81, ultimaSync:"13/09/2026 17:18", hubspotId:"HS-88224 / HS-91002", btimeId:null, statusSistemas:{OPS:"Ativo",HubSpot:"Duplicado",BTime:"Não cadastrado"}, matchStatus:"Divergência" }
+  ];
+
+  var contracts = [
+    { id:"C-201", arquivo:"contrato_rafael_moreira_2024.pdf", tecnico:"Rafael Moreira da Silva", data:"12/09/2026", status:"Extraído",
+      campos:[
+        {campo:"Nome completo", valor:"Rafael Moreira da Silva", origem:"contrato_rafael_moreira_2024.pdf", confianca:97},
+        {campo:"CPF", valor:"XXX.XXX.XXX-00", origem:"contrato_rafael_moreira_2024.pdf", confianca:94},
+        {campo:"Cidade", valor:"Salvador/BA", origem:"contrato_rafael_moreira_2024.pdf", confianca:91},
+        {campo:"Entidade contratual", valor:"Cooperativa Agro Sul", origem:"contrato_rafael_moreira_2024.pdf", confianca:88},
+        {campo:"Telefone", valor:"Não identificado", origem:"contrato_rafael_moreira_2024.pdf", confianca:0}
+      ] },
+    { id:"C-202", arquivo:"contrato_carlos_bittencourt.pdf", tecnico:"Carlos Eduardo Bittencourt", data:"10/09/2026", status:"Vinculado",
+      campos:[
+        {campo:"Nome completo", valor:"Carlos Eduardo Bittencourt", origem:"contrato_carlos_bittencourt.pdf", confianca:99},
+        {campo:"CPF", valor:"XXX.XXX.XXX-00", origem:"contrato_carlos_bittencourt.pdf", confianca:98},
+        {campo:"Cidade", valor:"Salvador/BA", origem:"contrato_carlos_bittencourt.pdf", confianca:95},
+        {campo:"Entidade contratual", valor:"Cooperativa Agro Sul", origem:"contrato_carlos_bittencourt.pdf", confianca:96}
+      ] },
+    { id:"C-203", arquivo:"contrato_kleberson_modesto.pdf", tecnico:"Kleberson Modesto", data:"09/09/2026", status:"Extraído",
+      campos:[
+        {campo:"Nome completo", valor:"Kleberson Modesto", origem:"contrato_kleberson_modesto.pdf", confianca:92},
+        {campo:"CPF", valor:"XXX.XXX.XXX-11", origem:"contrato_kleberson_modesto.pdf", confianca:60},
+        {campo:"Cidade", valor:"Vitória da Conquista/BA", origem:"contrato_kleberson_modesto.pdf", confianca:89},
+        {campo:"Entidade contratual", valor:"Não identificado", origem:"contrato_kleberson_modesto.pdf", confianca:0}
+      ] },
+    { id:"C-204", arquivo:"contrato_joao_paulo_cardoso.pdf", tecnico:"João Paulo Cardoso", data:"05/09/2026", status:"Não processado", campos:[] },
+    { id:"C-205", arquivo:"contrato_thiago_bezerra.pdf", tecnico:"Thiago Bezerra Lins", data:"04/09/2026", status:"Não processado", campos:[] },
+    { id:"C-206", arquivo:"contrato_newton_tadim.pdf", tecnico:"Newton Tadim", data:"01/09/2026", status:"Vinculado",
+      campos:[
+        {campo:"Nome completo", valor:"Newton Tadim", origem:"contrato_newton_tadim.pdf", confianca:96},
+        {campo:"CPF", valor:"XXX.XXX.XXX-00", origem:"contrato_newton_tadim.pdf", confianca:95},
+        {campo:"Cidade", valor:"Simões Filho/BA", origem:"contrato_newton_tadim.pdf", confianca:90},
+        {campo:"Entidade contratual", valor:"Newton Tadim (Autônomo)", origem:"contrato_newton_tadim.pdf", confianca:93}
+      ] },
+    { id:"C-207", arquivo:"contrato_bruno_salgado.pdf", tecnico:"Bruno Salgado Teixeira", data:"29/08/2026", status:"Extraído",
+      campos:[
+        {campo:"Nome completo", valor:"Bruno Salgado Teixeira", origem:"contrato_bruno_salgado.pdf", confianca:90},
+        {campo:"CPF", valor:"XXX.XXX.XXX-00", origem:"contrato_bruno_salgado.pdf", confianca:87},
+        {campo:"Cidade", valor:"Cachoeira/BA", origem:"contrato_bruno_salgado.pdf", confianca:84},
+        {campo:"Entidade contratual", valor:"Não identificado", origem:"contrato_bruno_salgado.pdf", confianca:0}
+      ] },
+    { id:"C-208", arquivo:"contrato_vanessa_lima.pdf", tecnico:"Vanessa Lima Cordeiro", data:"27/08/2026", status:"Não processado", campos:[] },
+    { id:"C-209", arquivo:"contrato_michelle_soller.pdf", tecnico:"Michelle Soller", data:"22/08/2026", status:"Vinculado",
+      campos:[
+        {campo:"Nome completo", valor:"Michelle Soller", origem:"contrato_michelle_soller.pdf", confianca:99},
+        {campo:"CPF", valor:"XXX.XXX.XXX-00", origem:"contrato_michelle_soller.pdf", confianca:97},
+        {campo:"Cidade", valor:"Feira de Santana/BA", origem:"contrato_michelle_soller.pdf", confianca:95},
+        {campo:"Entidade contratual", valor:"Michelle Soller (Autônoma)", origem:"contrato_michelle_soller.pdf", confianca:96}
+      ] },
+    { id:"C-210", arquivo:"contrato_patricia_nunes.pdf", tecnico:"Patrícia Nunes Costa", data:"20/08/2026", status:"Não processado", campos:[] },
+    { id:"C-211", arquivo:"contrato_diego_ramalho.pdf", tecnico:"Diego Ramalho Souza", data:"18/08/2026", status:"Não processado", campos:[] },
+    { id:"C-212", arquivo:"contrato_elaine_rocha.pdf", tecnico:"Elaine Cristina Rocha", data:"15/08/2026", status:"Não processado", campos:[] },
+    { id:"C-213", arquivo:"contrato_fernanda_aquino.pdf", tecnico:"Fernanda Aquino Reis", data:"10/08/2026", status:"Não processado", campos:[] },
+    { id:"C-214", arquivo:"contrato_marcos_andrade.pdf", tecnico:"Marcos Vinícius Andrade", data:"05/08/2026", status:"Não processado", campos:[] }
+  ];
+
+  var priorityQueue = [
+    { p:1, tecnico:"João Paulo Cardoso", motivo:"Sem contrato no OPS — visto na base operacional (BTime)", confianca:"—", status:"Contratação necessária" },
+    { p:1, tecnico:"Thiago Bezerra Lins", motivo:"Sem contrato no OPS — visto na base operacional (BTime)", confianca:"—", status:"Contratação necessária" },
+    { p:2, tecnico:"Rafael Moreira da Silva", motivo:"Match provável 96% — telefone divergente entre OPS e HubSpot", confianca:"96%", status:"Match pendente" },
+    { p:2, tecnico:"Kleberson Modesto", motivo:"CPF divergente entre Contrato e OPS", confianca:"64%", status:"Divergência" },
+    { p:2, tecnico:"Bruno Salgado Teixeira", motivo:"Sem cadastro em HubSpot — entidade contratual não identificada", confianca:"70%", status:"Divergência" },
+    { p:3, tecnico:"Vanessa Lima Cordeiro", motivo:"Duplicidade de cadastro em HubSpot", confianca:"81%", status:"Divergência" },
+    { p:3, tecnico:"Newton Tadim", motivo:"Ativo no OPS, porém inativo no BTime", confianca:"88%", status:"Divergência" },
+    { p:3, tecnico:"Diego Ramalho Souza", motivo:"Sem cadastro em BTime — completar reconciliação", confianca:"93%", status:"Match pendente" }
+  ];
+
+  var divergences = [
+    { tipo:"CPF divergente", tecnico:"Kleberson Modesto", prioridade:1, origem:"Contrato × OPS", responsavel:"Camila Prado", data:"16/09/2026", status:"Em análise", acao:"Solicitar cópia legível do documento ao técnico" },
+    { tipo:"Telefone divergente", tecnico:"Rafael Moreira da Silva", prioridade:2, origem:"OPS × HubSpot", responsavel:"Camila Prado", data:"18/09/2026", status:"Nova", acao:"Confirmar telefone atual com a cooperativa" },
+    { tipo:"Duplicidade de cadastro", tecnico:"Vanessa Lima Cordeiro", prioridade:2, origem:"HubSpot", responsavel:"Equipe Serviços", data:"13/09/2026", status:"Aguardando informação", acao:"Mesclar registros duplicados em HubSpot" },
+    { tipo:"Ativo em um sistema, inativo em outro", tecnico:"Newton Tadim", prioridade:3, origem:"OPS × BTime", responsavel:"Equipe Serviços", data:"15/09/2026", status:"Em análise", acao:"Verificar motivo da inativação no BTime" },
+    { tipo:"Sem entidade contratual vinculada", tecnico:"Bruno Salgado Teixeira", prioridade:3, origem:"OPS", responsavel:"Camila Prado", data:"14/09/2026", status:"Resolvida", acao:"Vincular à entidade 'Bruno Salgado Teixeira (Autônomo)'" }
+  ];
+
+  var ticketSteps = ["Aguardando contratação","Em análise","Contratação iniciada","Contrato recebido","Validado","Cadastro regularizado","Concluído"];
+  var tickets = [
+    { id:"HS-T-501", tecnico:"João Paulo Cardoso", cliente:"Transportes Vale Verde", step:0 },
+    { id:"HS-T-502", tecnico:"Thiago Bezerra Lins", cliente:"Expresso Litoral", step:1 },
+    { id:"HS-T-503", tecnico:"Rogério Malta", cliente:"Agro Cana Ltda", step:2 },
+    { id:"HS-T-504", tecnico:"Cristiane Farias", cliente:"GT Locações", step:1 },
+    { id:"HS-T-505", tecnico:"Wellington Duarte", cliente:"Pax Pneus", step:3 },
+    { id:"HS-T-506", tecnico:"Silvana Tokuda", cliente:"Conexão Montagens", step:4 },
+    { id:"HS-T-507", tecnico:"Igor Peixoto", cliente:"Trevo Bahia Florestal", step:0 },
+    { id:"HS-T-508", tecnico:"Aline Bastos", cliente:"Log Sul Distribuição", step:5 },
+    { id:"HS-T-509", tecnico:"Marcelo Hoffmann", cliente:"Transportes Vale Verde", step:6 }
+  ];
+
+  var syncLog = [
+    { tecnico:"Kleberson Modesto", destino:"BTime", status:"Falhou", ts:"19/09/2026 07:02", detalhe:"CPF ausente impede a criação do registro" },
+    { tecnico:"Bruno Salgado Teixeira", destino:"HubSpot", status:"Falhou", ts:"18/09/2026 22:41", detalhe:"Entidade contratual não identificada" },
+    { tecnico:"Vanessa Lima Cordeiro", destino:"HubSpot", status:"Falhou", ts:"18/09/2026 20:15", detalhe:"Conflito com registro duplicado existente" },
+    { tecnico:"Rafael Moreira da Silva", destino:"BTime", status:"Na fila", ts:"19/09/2026 08:14", detalhe:"Aguardando validação do match" },
+    { tecnico:"Carlos Eduardo Bittencourt", destino:"HubSpot", status:"Sincronizado", ts:"18/09/2026 21:02", detalhe:"Cadastro atualizado com sucesso" },
+    { tecnico:"Marcos Vinícius Andrade", destino:"BTime", status:"Sincronizado", ts:"18/09/2026 20:40", detalhe:"Cadastro atualizado com sucesso" },
+    { tecnico:"Michelle Soller", destino:"HubSpot", status:"Sincronizado", ts:"19/09/2026 07:50", detalhe:"Cadastro atualizado com sucesso" },
+    { tecnico:"Elaine Cristina Rocha", destino:"BTime", status:"Sincronizado", ts:"02/08/2026 08:00", detalhe:"Status alterado para inativo" }
+  ];
+
+  var auditLog = [
+    { who:"Camila Prado", ts:"19/09/2026 08:14", acao:"Reprocessou item da fila de sincronização", alvo:"Rafael Moreira da Silva → BTime", origem:"Sincronização" },
+    { who:"Camila Prado", ts:"18/09/2026 21:30", acao:"Marcou divergência como Resolvida", alvo:"Bruno Salgado Teixeira — sem entidade contratual", origem:"Divergências" },
+    { who:"Sistema (mock IA)", ts:"18/09/2026 18:02", acao:"Extraiu campos estruturados do contrato", alvo:"contrato_bruno_salgado.pdf — acesso a documento restrito", origem:"Contratos" },
+    { who:"Equipe Serviços", ts:"18/09/2026 15:44", acao:"Abriu ticket de contratação necessária", alvo:"Thiago Bezerra Lins", origem:"Contratações" },
+    { who:"Camila Prado", ts:"17/09/2026 11:20", acao:"Confirmou match (95%)", alvo:"Patrícia Nunes Costa — CPF XXX.XXX.XXX-00", origem:"Reconciliação" },
+    { who:"Camila Prado", ts:"16/09/2026 09:40", acao:"Abriu análise de divergência de CPF", alvo:"Kleberson Modesto", origem:"Divergências" },
+    { who:"Sistema (mock IA)", ts:"12/09/2026 14:10", acao:"Extraiu campos estruturados do contrato", alvo:"contrato_rafael_moreira_2024.pdf — acesso a documento restrito", origem:"Contratos" },
+    { who:"Camila Prado", ts:"02/08/2026 08:00", acao:"Sincronizou alteração de status para Inativo", alvo:"Elaine Cristina Rocha — CPF XXX.XXX.XXX-00", origem:"Sincronização" }
+  ];
+
+  /* ============ NAVIGATION ============ */
+  var views = ["dashboard","contratos","reconciliacao","tecnicos","entidades","divergencias","contratacoes","sincronizacao","auditoria","config"];
+
+  function navigate(view) {
+    views.forEach(function (v) {
+      var sec = document.getElementById("view-" + v);
+      if (sec) sec.hidden = (v !== view);
+    });
+    document.querySelectorAll(".nav-link").forEach(function (btn) {
+      btn.classList.toggle("active", btn.getAttribute("data-view") === view);
+    });
+    try { localStorage.setItem("infleet_last_view", view); } catch (e) {}
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById("sidebar-nav").addEventListener("click", function (e) {
+    var btn = e.target.closest(".nav-link");
+    if (!btn) return;
+    navigate(btn.getAttribute("data-view"));
+  });
+
+  /* ============ TOAST ============ */
+  function showToast(msg, isErr) {
+    var c = document.getElementById("toast-container");
+    var t = document.createElement("div");
+    t.className = "toast" + (isErr ? " err" : "");
+    t.innerHTML = '<svg><use href="#' + (isErr ? "i-x" : "i-check") + '"/></svg><span></span>';
+    t.querySelector("span").textContent = msg;
+    c.appendChild(t);
+    setTimeout(function () {
+      t.style.transition = "opacity .3s ease";
+      t.style.opacity = "0";
+      setTimeout(function () { t.remove(); }, 320);
+    }, 2600);
+  }
+
+  /* ============ FLOW TRAIL ============ */
+  var flowStepsGlobal = ["Contrato","Extração","Match","Validação","OPS","Contratação/Sincronização","Auditoria"];
+  function renderFlowTrail(containerId, currentIndex) {
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    var html = "";
+    flowStepsGlobal.forEach(function (label, i) {
+      var cls = i < currentIndex ? "done" : (i === currentIndex ? "current" : "");
+      html += '<div class="flow-step ' + cls + '"><span class="bubble">' + (i < currentIndex ? '<svg style="width:11px;height:11px"><use href="#i-check"/></svg>' : (i + 1)) + '</span><span class="lbl">' + label + '</span></div>';
+      if (i < flowStepsGlobal.length - 1) html += '<div class="flow-sep ' + (i < currentIndex ? "done" : "") + '"></div>';
+    });
+    el.innerHTML = html;
+  }
+  renderFlowTrail("flow-trail-recon", 3);
+
+  /* ============ CONTRATOS ============ */
+  var contractFilterStatus = "todos";
+  function renderContracts() {
+    var list = document.getElementById("contracts-list");
+    var filtered = contracts.filter(function (c) { return contractFilterStatus === "todos" || c.status === contractFilterStatus; });
+    list.innerHTML = filtered.map(function (c) {
+      var pillClass = c.status === "Vinculado" ? "pill-success" : (c.status === "Extraído" ? "pill-info" : "pill-neutral");
+      var fieldsHtml = "";
+      if (c.campos.length) {
+        fieldsHtml = '<div class="table-scroll"><table class="data-table extract-table"><thead><tr><th>Campo</th><th>Valor</th><th>Origem</th><th>Confiança</th></tr></thead><tbody>' +
+          c.campos.map(function (f) {
+            var confBar = f.confianca > 0 ? '<span class="conf-bar"><span style="width:' + f.confianca + '%"></span></span>' + f.confianca + '%' : '—';
+            var valueDisplay = f.valor === "Não identificado" ? '<span class="pill pill-neutral"><span class="dot"></span>Não identificado</span>' : f.valor;
+            return "<tr><td>" + f.campo + "</td><td>" + valueDisplay + '</td><td class="cell-sub mono">' + f.origem + "</td><td>" + confBar + "</td></tr>";
+          }).join("") + "</tbody></table></div>";
+      } else {
+        fieldsHtml = '<p class="muted-note" style="padding-top:10px"><svg><use href="#i-info"/></svg>Ainda não processado — extração de campos pendente (mock de integração de leitura automática de contrato).</p>';
+      }
+      return '<div class="contract-card" id="contract-' + c.id + '">' +
+        '<div class="contract-summary" onclick="toggleContract(\'' + c.id + '\')">' +
+          '<span class="file-icon"><svg><use href="#i-file-text"/></svg></span>' +
+          '<div class="meta"><div class="fname">' + c.arquivo + '</div><div class="fsub">' + c.tecnico + ' · enviado em ' + c.data + '</div></div>' +
+          '<span class="pill ' + pillClass + '"><span class="dot"></span>' + c.status + '</span>' +
+          '<span class="chev"><svg><use href="#i-chevron-right"/></svg></span>' +
+        '</div>' +
+        '<div class="contract-detail">' + fieldsHtml + '</div>' +
+      '</div>';
+    }).join("") || '<p class="muted-note"><svg><use href="#i-info"/></svg>Nenhum contrato nesse status.</p>';
+  }
+  window.toggleContract = function (id) {
+    var el = document.getElementById("contract-" + id);
+    el.classList.toggle("open");
+  };
+  document.getElementById("contract-filter").addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    document.querySelectorAll("#contract-filter button").forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    contractFilterStatus = btn.getAttribute("data-status");
+    renderContracts();
+  });
+  renderContracts();
+
+  /* ============ RECONCILIAÇÃO ============ */
+  window.handleReconAction = function (action) {
+    var banner = document.getElementById("recon-result-banner");
+    var lead = document.getElementById("recon-lead");
+    var actionsRow = banner.querySelector(".rb-actions");
+    if (action === "confirm") {
+      banner.classList.remove("rejected"); banner.classList.add("resolved");
+      lead.textContent = "Match confirmado por Camila Prado";
+      actionsRow.innerHTML = '<span class="pill pill-success"><span class="dot"></span>Confirmado</span>';
+      showToast("Match de Rafael Moreira da Silva confirmado.");
+    } else if (action === "reject") {
+      banner.classList.remove("resolved"); banner.classList.add("rejected");
+      lead.textContent = "Match rejeitado — devolvido para nova análise";
+      actionsRow.innerHTML = '<span class="pill pill-error"><span class="dot"></span>Rejeitado</span>';
+      showToast("Match rejeitado.", true);
+    } else {
+      lead.textContent = "Enviado para análise de um segundo revisor";
+      actionsRow.innerHTML = '<span class="pill pill-info"><span class="dot"></span>Em análise</span>';
+      showToast("Enviado para análise.");
+    }
+  };
+
+  var priorityFilterVal = "todos";
+  function renderPriorityTable() {
+    var tbody = document.querySelector("#priority-table tbody");
+    var filtered = priorityQueue.filter(function (r) { return priorityFilterVal === "todos" || String(r.p) === priorityFilterVal; });
+    tbody.innerHTML = filtered.map(function (r) {
+      var pClass = r.p === 1 ? "pill-error" : (r.p === 2 ? "pill-warn" : "pill-info");
+      var sClass = r.status === "Contratação necessária" ? "pill-error" : (r.status === "Divergência" ? "pill-warn" : "pill-info");
+      return "<tr><td><span class=\"pill " + pClass + "\"><span class=\"dot\"></span>Prioridade " + r.p + "</span></td><td class=\"cell-name\">" + r.tecnico + "</td><td>" + r.motivo + "</td><td>" + r.confianca + "</td><td><span class=\"pill " + sClass + "\"><span class=\"dot\"></span>" + r.status + "</span></td></tr>";
+    }).join("");
+  }
+  document.getElementById("priority-filter").addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    document.querySelectorAll("#priority-filter button").forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    priorityFilterVal = btn.getAttribute("data-p");
+    renderPriorityTable();
+  });
+  renderPriorityTable();
+
+  /* ============ TÉCNICOS ============ */
+  function sysPill(sysStatus) {
+    if (sysStatus === "Ativo") return '<span class="pill pill-success"><span class="dot"></span>Ativo</span>';
+    if (sysStatus === "Inativo") return '<span class="pill pill-neutral"><span class="dot"></span>Inativo</span>';
+    if (sysStatus === "Duplicado") return '<span class="pill pill-error"><span class="dot"></span>Duplicado</span>';
+    return '<span class="pill pill-error"><span class="dot"></span>Não cadastrado</span>';
+  }
+  window.renderTechnicians = function () {
+    var q = document.getElementById("tech-search").value.trim().toLowerCase();
+    var st = document.getElementById("tech-status-filter").value;
+    var tp = document.getElementById("tech-tipo-filter").value;
+    var tbody = document.querySelector("#tech-table tbody");
+    var filtered = technicians.filter(function (t) {
+      var matchQ = !q || t.nome.toLowerCase().indexOf(q) > -1 || t.cidade.toLowerCase().indexOf(q) > -1;
+      var matchSt = st === "todos" || t.status === st;
+      var matchTp = tp === "todos" || t.tipo === tp;
+      return matchQ && matchSt && matchTp;
+    });
+    tbody.innerHTML = filtered.map(function (t) {
+      var statusPill = t.status === "Ativo" ? '<span class="pill pill-success"><span class="dot"></span>Ativo</span>' : '<span class="pill pill-neutral"><span class="dot"></span>Inativo</span>';
+      var sysBadges = ["OPS","HubSpot","BTime"].map(function (s) {
+        var has = t.sistemas.indexOf(s) > -1;
+        return '<span class="pill ' + (has ? "pill-info" : "pill-neutral") + '" style="margin-right:4px;"><span class="dot"></span>' + s + "</span>";
+      }).join("");
+      var conf = t.confianca === null ? "—" : t.confianca + "%";
+      return '<tr class="row-clickable" onclick="openTechDrawer(\'' + t.id + '\')">' +
+        '<td class="cell-name">' + t.nome + '<div class="cell-sub">' + t.cidade + '</div></td>' +
+        "<td>" + t.tipo + "</td>" +
+        "<td>" + t.cidade + "</td>" +
+        "<td>" + sysBadges + "</td>" +
+        "<td>" + statusPill + "</td>" +
+        "<td>" + conf + "</td>" +
+      "</tr>";
+    }).join("") || '<tr><td colspan="6" class="cell-sub" style="padding:16px;">Nenhum técnico encontrado.</td></tr>';
+  };
+  renderTechnicians();
+
+  window.openTechDrawer = function (id) {
+    var t = technicians.filter(function (x) { return x.id === id; })[0];
+    if (!t) return;
+    var d = document.getElementById("drawer-content");
+    var sysRows = ["OPS","HubSpot","BTime"].map(function (s) {
+      return '<div class="sys-row"><span class="sname">' + s + '</span>' + sysPill(t.statusSistemas[s]) + '</div>';
+    }).join("");
+    d.innerHTML =
+      '<div class="drawer-head"><div><h3>' + t.nome + '</h3><p>' + t.tipo + (t.entidade && t.tipo !== "Cooperativa" ? "" : " · " + t.entidade) + '</p></div>' +
+        '<button class="drawer-close" onclick="closeDrawer()"><svg><use href="#i-x"/></svg></button></div>' +
+      '<div class="drawer-block"><h4>Dados</h4><div class="kv-grid">' +
+        '<div class="kv-item"><div class="k">CPF</div><div class="v mono">' + t.cpf + '</div></div>' +
+        '<div class="kv-item"><div class="k">Telefone</div><div class="v mono">' + t.telefone + '</div></div>' +
+        '<div class="kv-item"><div class="k">Cidade</div><div class="v">' + t.cidade + '</div></div>' +
+        '<div class="kv-item"><div class="k">Entidade contratual</div><div class="v">' + t.entidade + '</div></div>' +
+      '</div></div>' +
+      '<div class="drawer-block"><h4>Status por sistema</h4>' + sysRows + '</div>' +
+      '<div class="drawer-block"><h4>Crosswalk de identidade</h4><div class="kv-grid">' +
+        '<div class="kv-item"><div class="k">tecnico_id</div><div class="v mono">' + t.id + '</div></div>' +
+        '<div class="kv-item"><div class="k">entidade_contratual_id</div><div class="v mono">' + t.entidadeId + '</div></div>' +
+        '<div class="kv-item"><div class="k">hubspot_id</div><div class="v mono">' + (t.hubspotId || "—") + '</div></div>' +
+        '<div class="kv-item"><div class="k">btime_id</div><div class="v mono">' + (t.btimeId || "—") + '</div></div>' +
+        '<div class="kv-item"><div class="k">Confiança do match</div><div class="v">' + (t.confianca === null ? "—" : t.confianca + "%") + '</div></div>' +
+        '<div class="kv-item"><div class="k">Última sincronização</div><div class="v">' + t.ultimaSync + '</div></div>' +
+      '</div></div>';
+    document.getElementById("drawer-overlay").hidden = false;
+  };
+  window.closeDrawer = function () { document.getElementById("drawer-overlay").hidden = true; };
+
+  /* ============ DIVERGÊNCIAS ============ */
+  var divergFilterStatus = "todos";
+  function statusPillDiverg(s) {
+    if (s === "Resolvida") return "pill-success";
+    if (s === "Rejeitada") return "pill-neutral";
+    if (s === "Nova") return "pill-error";
+    return "pill-warn";
+  }
+  function renderDivergences() {
+    var tbody = document.querySelector("#diverg-table tbody");
+    var filtered = divergences.filter(function (d) { return divergFilterStatus === "todos" || d.status === divergFilterStatus; });
+    tbody.innerHTML = filtered.map(function (d, idx) {
+      var pClass = d.prioridade === 1 ? "pill-error" : (d.prioridade === 2 ? "pill-warn" : "pill-info");
+      return "<tr><td>" + d.tipo + '</td><td class="cell-name">' + d.tecnico + '</td><td><span class="pill ' + pClass + '"><span class="dot"></span>P' + d.prioridade + '</span></td><td class="cell-sub">' + d.origem + "</td><td>" + d.responsavel + "</td><td>" + d.data + '</td><td><span class="pill ' + statusPillDiverg(d.status) + '"><span class="dot"></span>' + d.status + '</span></td><td class="cell-sub">' + d.acao + "</td></tr>";
+    }).join("") || '<tr><td colspan="8" class="cell-sub" style="padding:16px;">Nenhuma divergência nesse status.</td></tr>';
+  }
+  document.getElementById("diverg-filter").addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    document.querySelectorAll("#diverg-filter button").forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    divergFilterStatus = btn.getAttribute("data-s");
+    renderDivergences();
+  });
+  renderDivergences();
+
+  /* ============ CONTRATAÇÕES (kanban) ============ */
+  function renderTickets() {
+    var el = document.getElementById("tickets-kanban");
+    el.innerHTML = ticketSteps.map(function (step, i) {
+      var cards = tickets.filter(function (t) { return t.step === i; });
+      return '<div class="kanban-col"><h4>' + step + " (" + cards.length + ')</h4>' +
+        cards.map(function (c) {
+          return '<div class="kanban-card"><div class="kt-name">' + c.tecnico + '</div><div class="kt-sub">' + c.cliente + " · " + c.id + '</div></div>';
+        }).join("") +
+      "</div>";
+    }).join("");
+  }
+  renderTickets();
+
+  /* ============ SINCRONIZAÇÃO ============ */
+  function renderSyncLog() {
+    var tbody = document.querySelector("#sync-table tbody");
+    tbody.innerHTML = syncLog.map(function (s, idx) {
+      var pClass = s.status === "Sincronizado" ? "pill-success" : (s.status === "Na fila" ? "pill-info" : "pill-error");
+      var actionCell = s.status === "Falhou" ? '<button class="btn btn-sm" onclick="reprocessSync(' + idx + ')"><svg><use href="#i-refresh"/></svg>Reprocessar</button>' : "";
+      return "<tr id=\"sync-row-" + idx + "\"><td class=\"cell-name\">" + s.tecnico + "</td><td>" + s.destino + '</td><td><span class="pill ' + pClass + '"><span class="dot"></span>' + s.status + '</span></td><td class="cell-sub">' + s.ts + '</td><td class="cell-sub">' + s.detalhe + "</td><td>" + actionCell + "</td></tr>";
+    }).join("");
+  }
+  window.reprocessSync = function (idx) {
+    var s = syncLog[idx];
+    showToast("Reprocessando sincronização de " + s.tecnico + " (" + s.destino + ")...");
+    setTimeout(function () {
+      syncLog[idx].status = "Sincronizado";
+      syncLog[idx].detalhe = "Reprocessado manualmente por Camila Prado";
+      syncLog[idx].ts = "19/09/2026 " + (new Date()).getHours() + ":" + String((new Date()).getMinutes()).padStart(2, "0");
+      renderSyncLog();
+      showToast("Sincronização de " + s.tecnico + " concluída com sucesso.");
+    }, 900);
+  };
+  renderSyncLog();
+
+  /* ============ AUDITORIA ============ */
+  function renderAudit() {
+    var el = document.getElementById("audit-timeline");
+    el.innerHTML = auditLog.map(function (a) {
+      return '<li class="tl-item"><span class="tl-dot"><svg><use href="#i-history"/></svg></span>' +
+        '<div class="tl-body"><div class="tl-top"><span class="tl-who">' + a.who + '</span><span class="tl-time">' + a.ts + '</span></div>' +
+        '<div class="tl-desc">' + a.acao + '</div>' +
+        '<div class="tl-origin">Alvo: ' + a.alvo + ' · Origem: ' + a.origem + '</div></div></li>';
+    }).join("");
+  }
+  renderAudit();
+
+  /* ============ INIT ============ */
+  var startView = "dashboard";
+  try {
+    var saved = localStorage.getItem("infleet_last_view");
+    if (saved && views.indexOf(saved) > -1) startView = saved;
+  } catch (e) {}
+  navigate(startView);
+
+})();
+</script>
